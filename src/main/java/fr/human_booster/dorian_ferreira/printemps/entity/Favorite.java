@@ -9,8 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 public class Favorite {
@@ -27,11 +25,9 @@ public class Favorite {
 
     @MapsId("userUuid")
     @ManyToOne
-    @JoinColumn(nullable = false)
     private User user;
 
     @MapsId("lodgingUuid")
     @ManyToOne
-    @JoinColumn(nullable = false)
     private Lodging lodging;
 }

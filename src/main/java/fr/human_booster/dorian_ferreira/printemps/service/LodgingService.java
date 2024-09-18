@@ -22,7 +22,7 @@ public class LodgingService {
         lodging.setNightPrice(lodgingCreateDTO.getNightPrice());
         lodging.setSlug(lodgingCreateDTO.getSlug());
 
-        return lodgingRepository.save(lodging);
+        return lodgingRepository.saveAndFlush(lodging);
     }
 
     public List<Lodging> getAll() {

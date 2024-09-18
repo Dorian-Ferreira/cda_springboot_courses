@@ -3,6 +3,7 @@ package fr.human_booster.dorian_ferreira.printemps.service;
 import fr.human_booster.dorian_ferreira.printemps.dto.FavoriteDto;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Favorite;
+import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
 import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.LodgingRepository;
@@ -24,9 +25,14 @@ public class FavoriteService {
 
         favorite.setUser(userService.getById(favoriteDto.getUserId()));
         favorite.setLodging(lodgingService.getById(favoriteDto.getLodgingId()));
+
+        favorite.setId(new FavoriteId());
+        favorite.getId().setLodgingUuid(favoriteDto.getLodgingId());
+        favorite.getId().setUserUuid(favoriteDto.getUserId());
+
         favorite.setCreatedAt(LocalDateTime.now());
 
-        return favoriteRepository.save(favorite);
+        return favoriteRepository.saveAndFlush(favorite);
     }
 
     public List<Favorite> getAll() {

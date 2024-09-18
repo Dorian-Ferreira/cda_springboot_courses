@@ -23,7 +23,7 @@ public class UserService {
         user.setLastName(userDto.getLastName());
         user.setBirthAt(userDto.getBirthAt());
 
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
 
     public List<User> getAll() {
