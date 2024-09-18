@@ -53,6 +53,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userUuid")
+    @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
 }

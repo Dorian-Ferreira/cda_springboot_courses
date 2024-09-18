@@ -13,30 +13,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Entity
-@IdClass(FavoriteId.class)
 public class Favorite {
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 
-//    @EmbeddedId
-//    private FavoriteId id;
-
-    @Id
-    private String userUuid;
-
-    @Id
-    private String lodgingUuid;
+    @EmbeddedId
+    private FavoriteId id;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-//    @ManyToOne
-//    @JoinColumn(nullable = false)
-//    private User user;
-//
-//    @ManyToOne
-//    @JoinColumn( nullable = false)
-//    private Lodging lodging;
+    @MapsId("userUuid")
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
+
+    @MapsId("lodgingUuid")
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Lodging lodging;
 }

@@ -22,8 +22,8 @@ public class FavoriteService {
     public Favorite create(FavoriteDto favoriteDto) {
         Favorite favorite = new Favorite();
 
-        favorite.setUserUuid(favoriteDto.getUserId());
-        favorite.setLodgingUuid(favoriteDto.getLodgingId());
+        favorite.setUser(userService.getById(favoriteDto.getUserId()));
+        favorite.setLodging(lodgingService.getById(favoriteDto.getLodgingId()));
         favorite.setCreatedAt(LocalDateTime.now());
 
         return favoriteRepository.save(favorite);
