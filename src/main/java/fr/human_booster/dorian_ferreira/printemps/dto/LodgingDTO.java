@@ -1,6 +1,6 @@
 package fr.human_booster.dorian_ferreira.printemps.dto;
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,18 +10,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDTO {
-
-    @Email
+public class LodgingDTO {
     @NotNull
     @NotBlank
-    private String email;
+    private String name;
 
-    @NotNull
-    @NotBlank
-    private String password;
+    private String description;
 
-    @NotNull
-    @NotBlank
-    private String confirmPassword;
+    @Min(1)
+    private int capacity;
+
+    private boolean isAccessible;
+
+    @Min(1)
+    private int nightPrice;
+
+    private Long addressId;
+
+    private AddressLodgingDTO addressDTO;
 }

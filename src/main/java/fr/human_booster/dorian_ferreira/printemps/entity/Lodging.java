@@ -1,6 +1,9 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -24,21 +27,29 @@ public class Lodging {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid;
 
+    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @Min(1)
     @Column(nullable = false)
     private int capacity;
 
+    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private boolean isAccessible;
 
+    @Min(1)
     @Column(nullable = false)
     private int nightPrice;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @NotNull
+    @NotBlank
     @Column(nullable = false)
     private String slug;
 
@@ -57,6 +68,7 @@ public class Lodging {
     @ManyToMany
     private List<Room> rooms = new ArrayList<>();
 
+    @NotNull
     @OneToOne
     private Address address;
 }

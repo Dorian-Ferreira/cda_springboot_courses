@@ -1,6 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -20,14 +21,18 @@ public class Favorite {
     @EmbeddedId
     private FavoriteId id;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @MapsId("userUuid")
+    @NotNull
     @ManyToOne
+    @MapsId("userUuid")
     private User user;
 
-    @MapsId("lodgingUuid")
+    @NotNull
     @ManyToOne
+    @MapsId("lodgingUuid")
     private Lodging lodging;
 }
+

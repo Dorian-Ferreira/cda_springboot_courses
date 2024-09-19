@@ -1,6 +1,8 @@
 package fr.human_booster.dorian_ferreira.printemps.dto;
 
-import jakarta.validation.constraints.Email;
+import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,18 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCreateDTO {
-
-    @Email
-    @NotNull
-    @NotBlank
-    private String email;
+public class MediaDTO {
 
     @NotNull
     @NotBlank
-    private String password;
+    private String path;
 
     @NotNull
     @NotBlank
-    private String confirmPassword;
+    private String extension;
 }

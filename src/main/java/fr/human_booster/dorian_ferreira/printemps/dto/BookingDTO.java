@@ -1,27 +1,29 @@
 package fr.human_booster.dorian_ferreira.printemps.dto;
 
-import jakarta.validation.constraints.Email;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class UserCreateDTO {
-
-    @Email
+public class BookingDTO {
     @NotNull
-    @NotBlank
-    private String email;
+    private LocalDateTime startedAt;
 
     @NotNull
-    @NotBlank
-    private String password;
+    private LocalDateTime finishedAt;
+
+    private int quantity;
 
     @NotNull
     @NotBlank
-    private String confirmPassword;
+    private String userUuid;
+
+    @NotNull
+    @NotBlank
+    private String lodgingUuid;
 }
