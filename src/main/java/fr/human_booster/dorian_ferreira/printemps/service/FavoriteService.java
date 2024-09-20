@@ -1,8 +1,11 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
+import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
+import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Favorite;
 import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +14,27 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class FavoriteService {
+public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId> {
     private FavoriteRepository favoriteRepository;
     private UserService userService;
     private LodgingService lodgingService;
 
     public Favorite create(FavoriteId favoriteDto) {
-        Favorite favorite = new Favorite();
+        Favorite favorite = dtoToObject(favoriteDto, new Favorite());
+
+        favorite.setCreatedAt(LocalDateTime.now());
+
+        return favoriteRepository.saveAndFlush(favorite);
+    }
+
+    @Override
+    public  Favorite dtoToObject(FavoriteId favoriteDto, Favorite favorite) {
 
         favorite.setUser(userService.findById(favoriteDto.getUserUuid()));
         favorite.setLodging(lodgingService.findById(favoriteDto.getLodgingUuid()));
         favorite.setId(new FavoriteId(favoriteDto.getLodgingUuid(), favoriteDto.getUserUuid()));
 
-        favorite.setCreatedAt(LocalDateTime.now());
-
-        return favoriteRepository.saveAndFlush(favorite);
+        return favorite;
     }
 
     public void delete(Favorite favorite) {

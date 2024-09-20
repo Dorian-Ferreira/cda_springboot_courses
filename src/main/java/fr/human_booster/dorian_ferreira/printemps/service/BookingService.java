@@ -1,8 +1,11 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
+import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.BookingDTO;
+import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Booking;
 import fr.human_booster.dorian_ferreira.printemps.repository.BookingRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +14,20 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class BookingService {
+public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> {
 
     private BookingRepository bookingRepository;
     private UserService userService;
     private LodgingService lodgingService;
 
     public Booking create(BookingDTO dto) {
-        Booking booking = new Booking();
+        Booking booking = dtoToObject(dto, new Booking());
 
+        return bookingRepository.saveAndFlush(booking);
+    }
+
+    @Override
+    public  Booking dtoToObject(BookingDTO dto, Booking booking) {
         booking.setNumber("Booking" + (bookingRepository.count() + 1));
 
         booking.setCreatedAt(LocalDateTime.now());
@@ -31,7 +39,7 @@ public class BookingService {
         booking.setUser(userService.findById(dto.getUserUuid()));
         booking.setLodging(lodgingService.findById(dto.getLodgingUuid()));
 
-        return bookingRepository.saveAndFlush(booking);
+        return booking;
     }
 
     public void delete(Booking booking) {

@@ -1,9 +1,11 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
+import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressLodgingDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressUserDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +13,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AddressService {
+public class AddressService implements ServiceDtoInterface<Address, AddressDTO> {
 
     private AddressRepository addressRepository;
     private UserService userService;
 
     public Address create(AddressUserDTO addressUserDTO, String userId) {
-        Address address = new Address();
-
-        address.setStreet(addressUserDTO.getStreet());
-        address.setNumber(addressUserDTO.getNumber());
-        address.setZipCode(addressUserDTO.getZipCode());
-        address.setCity(addressUserDTO.getCity());
-        address.setCountry(addressUserDTO.getCountry());
-
-        address.setMore(addressUserDTO.getMore());
+        Address address = dtoToObject(addressUserDTO, new Address());
 
         address.setBilled(addressUserDTO.isBilled());
 
@@ -35,25 +29,24 @@ public class AddressService {
     }
 
     public Address create(AddressLodgingDTO addressDTO) {
-        Address address = new Address();
-
-        address.setStreet(addressDTO.getStreet());
-        address.setNumber(addressDTO.getNumber());
-        address.setZipCode(addressDTO.getZipCode());
-        address.setCity(addressDTO.getCity());
-        address.setCountry(addressDTO.getCountry());
+        Address address = dtoToObject(addressDTO, new Address());
 
         address.setLatitude(addressDTO.getLatitude());
         address.setLongitude(addressDTO.getLongitude());
-
-        address.setMore(addressDTO.getMore());
 
         return addressRepository.saveAndFlush(address);
     }
 
     public Address update(AddressUserDTO addressUserDTO, Long id) {
-        Address address = findById(id);
+        Address address = dtoToObject(addressUserDTO, findById(id));
 
+        address.setBilled(addressUserDTO.isBilled());
+
+        return addressRepository.saveAndFlush(address);
+    }
+
+    @Override
+    public Address dtoToObject(AddressDTO addressUserDTO, Address address) {
         address.setStreet(addressUserDTO.getStreet());
         address.setNumber(addressUserDTO.getNumber());
         address.setZipCode(addressUserDTO.getZipCode());
@@ -61,10 +54,6 @@ public class AddressService {
         address.setCountry(addressUserDTO.getCountry());
 
         address.setMore(addressUserDTO.getMore());
-
-        address.setBilled(addressUserDTO.isBilled());
-
-        addressRepository.flush();
 
         return address;
     }

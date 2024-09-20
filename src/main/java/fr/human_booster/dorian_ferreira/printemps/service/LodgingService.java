@@ -1,9 +1,12 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
-import fr.human_booster.dorian_ferreira.printemps.dto.LodgingDTO;
+import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
+import fr.human_booster.dorian_ferreira.printemps.dto.LodgingCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingUpdateDTO;
+import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.repository.LodgingRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,32 +14,30 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class LodgingService {
+public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdateDTO> {
     private LodgingRepository lodgingRepository;
     private AddressService addressService;
 
-    public Lodging create(LodgingDTO lodgingDTO) {
-        Lodging lodging = new Lodging();
+    public Lodging create(LodgingCreateDTO lodgingCreateDTO) {
+        Lodging lodging = dtoToObject(lodgingCreateDTO, new Lodging());
 
-        lodging.setName(lodgingDTO.getName());
-
-        lodging.setCapacity(lodgingDTO.getCapacity());
-        lodging.setAccessible(lodgingDTO.isAccessible());
-        lodging.setDescription(lodgingDTO.getDescription());
-        lodging.setNightPrice(lodgingDTO.getNightPrice());
-
-        if(lodgingDTO.getAddressId() != null) {
-            lodging.setAddress(addressService.findById(lodgingDTO.getAddressId()));
-        } else if(lodgingDTO.getAddressDTO() != null){
-            lodging.setAddress(addressService.create(lodgingDTO.getAddressDTO()));
+        if(lodgingCreateDTO.getAddressId() != null) {
+            lodging.setAddress(addressService.findById(lodgingCreateDTO.getAddressId()));
+        } else if(lodgingCreateDTO.getAddressDTO() != null){
+            lodging.setAddress(addressService.create(lodgingCreateDTO.getAddressDTO()));
         }
 
         return lodgingRepository.saveAndFlush(lodging);
     }
 
     public Lodging update(LodgingUpdateDTO lodgingUpdateDTO, String uuid) {
-        Lodging lodging = findById(uuid);
+        Lodging lodging = dtoToObject(lodgingUpdateDTO, findById(uuid));
 
+        return lodgingRepository.saveAndFlush(lodging);
+    }
+
+    @Override
+    public  Lodging dtoToObject(LodgingUpdateDTO lodgingUpdateDTO, Lodging lodging) {
         lodging.setName(lodgingUpdateDTO.getName());
 
         lodging.setCapacity(lodgingUpdateDTO.getCapacity());
@@ -44,10 +45,9 @@ public class LodgingService {
         lodging.setAccessible(lodgingUpdateDTO.isAccessible());
         lodging.setNightPrice(lodgingUpdateDTO.getNightPrice());
 
-        lodgingRepository.flush();
-
         return lodging;
     }
+
 
     public void delete(Lodging lodging) {
         lodgingRepository.delete(lodging);

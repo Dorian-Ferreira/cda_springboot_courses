@@ -1,8 +1,11 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
+import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.ReviewDTO;
+import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Review;
 import fr.human_booster.dorian_ferreira.printemps.repository.ReviewRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,24 +14,30 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ReviewService {
+public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
 
     private ReviewRepository reviewRepository;
     private UserService userService;
     private LodgingService lodgingService;
 
     public Review create(ReviewDTO dto) {
-        Review review = new Review();
+        Review review = dtoToObject(dto, new Review());
+
+        return reviewRepository.saveAndFlush(review);
+    }
+
+    @Override
+    public  Review dtoToObject(ReviewDTO reviewDTO, Review review) {
 
         review.setCreatedAt(LocalDateTime.now());
 
-        review.setRating(dto.getRating());
-        review.setContent(dto.getContent());
+        review.setRating(reviewDTO.getRating());
+        review.setContent(reviewDTO.getContent());
 
-        review.setUser(userService.findById(dto.getUserUuid()));
-        review.setLodging(lodgingService.findById(dto.getLodgingUuid()));
+        review.setUser(userService.findById(reviewDTO.getUserUuid()));
+        review.setLodging(lodgingService.findById(reviewDTO.getLodgingUuid()));
 
-        return reviewRepository.saveAndFlush(review);
+        return review;
     }
 
     public void delete(Review review) {

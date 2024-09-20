@@ -8,26 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AddressUserDTO {
-    @NotNull
-    @NotBlank
-    private String street;
-
-    private String number;
-
-    @NotNull
-    @NotBlank
-    private String zipCode;
-
-    @NotNull
-    @NotBlank
-    private String city;
-
-    @NotNull
-    @NotBlank
-    private String country;
-
-    private String more;
-
+public class AddressUserDTO extends AddressDTO {
     private boolean isBilled;
 }

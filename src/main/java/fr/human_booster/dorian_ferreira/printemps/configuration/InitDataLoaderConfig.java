@@ -30,6 +30,9 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createUsers() {
+        if(userService.count() >= NB_USERS)
+            return;
+
         for (int i = 0; i < NB_USERS; i++) {
             UserCreateDTO userCreateDto = new UserCreateDTO();
             userCreateDto.setPassword("12345");

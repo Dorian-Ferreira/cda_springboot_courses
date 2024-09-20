@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.UserCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.repository.UserRepository;
+import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,31 +13,38 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
     private UserRepository userRepository;
 
     public User create(UserCreateDTO userDto) {
-        User user = new User();
-
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-
-        user.setRoles("ROLE_USER");
-        user.setCreatedAt(LocalDateTime.now());
+        User user = dtoToObject(userDto, new User());
 
         return userRepository.saveAndFlush(user);
     }
 
     public User update(UserUpdateDTO userDto, String uuid) {
-        User user = findById(uuid);
+        User user = dtoUpdateToObject(userDto, findById(uuid));
 
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setBirthAt(userDto.getBirthAt());
-        user.setPhone(userDto.getPhone());
-        user.setPhoto(userDto.getPhoto());
+        return userRepository.saveAndFlush(user);
+    }
 
-        userRepository.flush();
+    @Override
+    public User dtoToObject(UserCreateDTO userCreateDTO, User user) {
+        user.setEmail(userCreateDTO.getEmail());
+        user.setPassword(userCreateDTO.getPassword());
+
+        user.setRoles("[ROLE_USER]");
+        user.setCreatedAt(LocalDateTime.now());
+
+        return user;
+    }
+
+    private User dtoUpdateToObject(UserUpdateDTO userUpdateDTO, User user) {
+        user.setFirstName(userUpdateDTO.getFirstName());
+        user.setLastName(userUpdateDTO.getLastName());
+        user.setBirthAt(userUpdateDTO.getBirthAt());
+        user.setPhone(userUpdateDTO.getPhone());
+        user.setPhoto(userUpdateDTO.getPhoto());
 
         return user;
     }
@@ -51,5 +59,9 @@ public class UserService {
 
     public User findById(String userId) {
         return userRepository.findById(userId).orElse(null);
+    }
+
+    public long count() {
+        return userRepository.count();
     }
 }

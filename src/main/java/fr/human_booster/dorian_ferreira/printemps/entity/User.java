@@ -67,4 +67,21 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uuid='" + uuid + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles='" + roles + '\'' +
+                ", isVerified=" + isVerified +
+                ", birthAt=" + birthAt +
+                ", createdAt=" + createdAt +
+                ", phone='" + phone + '\'' +
+                ", photo='" + photo + '\'' +
+                '}';
+    }
 }
