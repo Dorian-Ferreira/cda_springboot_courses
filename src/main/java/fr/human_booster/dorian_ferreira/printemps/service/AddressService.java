@@ -54,28 +54,19 @@ public class AddressService {
     public Address update(AddressUserDTO addressUserDTO, Long id) {
         Address address = findById(id);
 
-        if(addressUserDTO.getStreet().equals(address.getStreet()))
-            address.setStreet(addressUserDTO.getStreet());
+        address.setStreet(addressUserDTO.getStreet());
+        address.setNumber(addressUserDTO.getNumber());
+        address.setZipCode(addressUserDTO.getZipCode());
+        address.setCity(addressUserDTO.getCity());
+        address.setCountry(addressUserDTO.getCountry());
 
-        if(addressUserDTO.getNumber().equals(address.getNumber()))
-            address.setNumber(addressUserDTO.getNumber());
+        address.setMore(addressUserDTO.getMore());
 
-        if(addressUserDTO.getZipCode().equals(address.getZipCode()))
-            address.setZipCode(addressUserDTO.getZipCode());
+        address.setBilled(addressUserDTO.isBilled());
 
-        if(addressUserDTO.getCity().equals(address.getCity()))
-            address.setCity(addressUserDTO.getCity());
+        addressRepository.flush();
 
-        if(addressUserDTO.getCountry().equals(address.getCountry()))
-            address.setCountry(addressUserDTO.getCountry());
-
-        if(addressUserDTO.getMore().equals(address.getMore()))
-            address.setMore(addressUserDTO.getMore());
-
-        if(addressUserDTO.isBilled() != address.isBilled())
-            address.setBilled(addressUserDTO.isBilled());
-
-        return addressRepository.saveAndFlush(address);
+        return address;
     }
 
     public Address findById(Long id) {

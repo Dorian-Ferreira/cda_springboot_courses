@@ -19,15 +19,15 @@ public class LodgingService {
         Lodging lodging = new Lodging();
 
         lodging.setName(lodgingDTO.getName());
+
         lodging.setCapacity(lodgingDTO.getCapacity());
         lodging.setAccessible(lodgingDTO.isAccessible());
         lodging.setDescription(lodgingDTO.getDescription());
         lodging.setNightPrice(lodgingDTO.getNightPrice());
-        lodging.setSlug(lodgingDTO.getName());
 
         if(lodgingDTO.getAddressId() != null) {
             lodging.setAddress(addressService.findById(lodgingDTO.getAddressId()));
-        } else {
+        } else if(lodgingDTO.getAddressDTO() != null){
             lodging.setAddress(addressService.create(lodgingDTO.getAddressDTO()));
         }
 
@@ -37,26 +37,16 @@ public class LodgingService {
     public Lodging update(LodgingUpdateDTO lodgingUpdateDTO, String uuid) {
         Lodging lodging = findById(uuid);
 
-        if(!lodgingUpdateDTO.getName().equals(lodging.getName())) {
-            lodging.setName(lodgingUpdateDTO.getName());
-            lodging.setSlug(lodgingUpdateDTO.getName());
-        }
+        lodging.setName(lodgingUpdateDTO.getName());
 
-        if(lodgingUpdateDTO.getCapacity() != lodging.getCapacity())
-            lodging.setCapacity(lodgingUpdateDTO.getCapacity());
+        lodging.setCapacity(lodgingUpdateDTO.getCapacity());
+        lodging.setDescription(lodgingUpdateDTO.getDescription());
+        lodging.setAccessible(lodgingUpdateDTO.isAccessible());
+        lodging.setNightPrice(lodgingUpdateDTO.getNightPrice());
 
-        if(!lodgingUpdateDTO.getDescription().equals(lodging.getDescription()))
-            lodging.setDescription(lodgingUpdateDTO.getDescription());
+        lodgingRepository.flush();
 
-        if(lodgingUpdateDTO.isAccessible() != lodging.isAccessible())
-            lodging.setAccessible(lodgingUpdateDTO.isAccessible());
-
-        if(lodgingUpdateDTO.getNightPrice() != lodging.getNightPrice())
-            lodging.setNightPrice(lodgingUpdateDTO.getNightPrice());
-
-        lodging.setSlug(lodgingUpdateDTO.getName());
-
-        return lodgingRepository.saveAndFlush(lodging);
+        return lodging;
     }
 
     public void delete(Lodging lodging) {

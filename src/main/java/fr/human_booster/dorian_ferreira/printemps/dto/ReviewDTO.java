@@ -26,7 +26,11 @@ public class ReviewDTO {
     @Positive
     private float rating;
 
+    @NotNull
+    @NotBlank
     private String userUuid;
 
+    @NotNull
+    @NotBlank
     private String lodgingUuid;
 }

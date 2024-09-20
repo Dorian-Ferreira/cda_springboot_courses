@@ -30,25 +30,15 @@ public class UserService {
     public User update(UserUpdateDTO userDto, String uuid) {
         User user = findById(uuid);
 
-        if(!user.getPassword().equals(userDto.getPassword()))
-            user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setBirthAt(userDto.getBirthAt());
+        user.setPhone(userDto.getPhone());
+        user.setPhoto(userDto.getPhoto());
 
-        if(!user.getFirstName().equals(userDto.getFirstName()))
-            user.setFirstName(userDto.getFirstName());
+        userRepository.flush();
 
-        if(!user.getLastName().equals(userDto.getLastName()))
-            user.setLastName(userDto.getLastName());
-
-        if(!user.getBirthAt().equals(userDto.getBirthAt()))
-            user.setBirthAt(userDto.getBirthAt());
-
-        if(!user.getPhone().equals(userDto.getPhone()))
-            user.setPhone(userDto.getPhone());
-
-        if(!user.getPhoto().equals(userDto.getPhoto()))
-            user.setPhoto(userDto.getPhoto());
-
-        return userRepository.saveAndFlush(user);
+        return user;
     }
 
     public void delete(User user) {

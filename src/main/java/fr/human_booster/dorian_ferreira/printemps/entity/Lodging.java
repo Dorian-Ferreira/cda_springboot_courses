@@ -1,5 +1,6 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
+import fr.human_booster.dorian_ferreira.printemps.slugger.SluggerInterface;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.awt.print.Book;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ import java.util.List;
         @Index(columnList = "slug")
     }
 )
-public class Lodging {
+public class Lodging implements SluggerInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -71,4 +73,9 @@ public class Lodging {
     @NotNull
     @OneToOne
     private Address address;
+
+    @Override
+    public String getField() {
+        return name;
+    }
 }

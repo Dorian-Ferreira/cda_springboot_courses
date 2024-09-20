@@ -23,14 +23,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid;
 
-    @NotNull
-    @NotBlank
-    @Column(nullable = false)
     private String firstName;
 
-    @NotNull
-    @NotBlank
-    @Column(nullable = false)
     private String lastName;
 
     @Email
@@ -52,8 +46,6 @@ public class User {
     @Column(nullable = false)
     private boolean isVerified;
 
-    @NotNull
-    @Column(nullable = false)
     private LocalDate birthAt;
 
     @NotNull

@@ -1,5 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,17 +13,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserUpdateDTO {
 
+    @NotNull
+    @NotBlank
     private String firstName;
 
+    @NotNull
+    @NotBlank
     private String lastName;
 
-    private String password;
-
-    private String confirmPassword;
-
+    @NotNull
+    @NotBlank
     private String phone;
 
+    @NotNull
+    @NotBlank
     private String photo;
 
+    @NotNull
+    @NotBlank
     private LocalDate birthAt;
 }
