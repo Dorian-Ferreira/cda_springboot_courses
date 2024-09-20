@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.awt.print.Book;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +36,6 @@ public class Lodging implements SluggerInterface {
     @Column(nullable = false)
     private int capacity;
 
-    @NotNull
-    @NotBlank
     @Column(nullable = false)
     private boolean isAccessible;
 
@@ -68,7 +64,7 @@ public class Lodging implements SluggerInterface {
     private List<Media> medias = new ArrayList<>();
 
     @ManyToMany
-    private List<Room> rooms = new ArrayList<>();
+    private List<RoomType> roomTypes = new ArrayList<>();
 
     @NotNull
     @OneToOne
@@ -77,5 +73,11 @@ public class Lodging implements SluggerInterface {
     @Override
     public String getField() {
         return name;
+    }
+
+    public void addRoom(RoomType roomType) {
+        if(!roomTypes.contains(roomType)) {
+            roomTypes.add(roomType);
+        }
     }
 }

@@ -53,4 +53,8 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
     public List<Booking> findAll() {
         return bookingRepository.findAll();
     }
+
+    public long count() {
+        return bookingRepository.count();
+    }
 }

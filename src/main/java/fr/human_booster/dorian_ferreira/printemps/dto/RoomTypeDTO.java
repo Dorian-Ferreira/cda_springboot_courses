@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomDTO {
+public class RoomTypeDTO {
 
     @NotNull
     @NotBlank

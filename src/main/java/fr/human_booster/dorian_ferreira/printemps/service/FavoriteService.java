@@ -48,4 +48,8 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
     public List<Favorite> findAll() {
         return favoriteRepository.findAll();
     }
+
+    public long count() {
+        return favoriteRepository.count();
+    }
 }

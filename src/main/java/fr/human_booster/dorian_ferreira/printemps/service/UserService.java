@@ -64,4 +64,8 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
     public long count() {
         return userRepository.count();
     }
+
+    public User getOneRandom() {
+        return userRepository.findRandom();
+    }
 }

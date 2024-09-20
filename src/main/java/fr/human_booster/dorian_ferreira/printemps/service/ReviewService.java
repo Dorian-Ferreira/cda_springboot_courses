@@ -51,4 +51,8 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
     public List<Review> findAll() {
         return reviewRepository.findAll();
     }
+
+    public long count() {
+        return reviewRepository.count();
+    }
 }

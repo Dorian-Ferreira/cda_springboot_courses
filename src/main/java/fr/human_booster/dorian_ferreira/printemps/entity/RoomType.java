@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-public class Room {
+public class RoomType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,6 @@ public class Room {
     @Column(nullable = false)
     private String type;
 
-    @ManyToMany(mappedBy = "rooms")
+    @ManyToMany(mappedBy = "roomTypes")
     private List<Lodging> lodgings = new ArrayList<>();
 }
