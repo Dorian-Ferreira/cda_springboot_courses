@@ -1,7 +1,5 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
-import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
-import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Favorite;
 import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;

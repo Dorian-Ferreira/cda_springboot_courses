@@ -1,5 +1,6 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsLodging;
 import fr.human_booster.dorian_ferreira.printemps.slugger.SluggerInterface;
@@ -43,7 +44,7 @@ public class Lodging implements SluggerInterface {
 
     @JsonView(JsonViewsLodging.Accessible.class)
     @Column(nullable = false)
-    private boolean isAccessible;
+    private Boolean isAccessible;
 
     @JsonView(JsonViewsLodging.NightPrice.class)
     @Min(1)

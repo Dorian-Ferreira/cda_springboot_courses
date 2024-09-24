@@ -9,5 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 public class AddressUserDTO extends AddressDTO {
-    private boolean isBilled;
+    @NotNull
+    private Boolean isBilled;
 }

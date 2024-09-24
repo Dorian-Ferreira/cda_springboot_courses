@@ -23,7 +23,7 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         try{
             Address address = dtoToObject(addressUserDTO, new Address());
 
-            address.setBilled(addressUserDTO.isBilled());
+            address.setIsBilled(addressUserDTO.getIsBilled());
 
             address.setUser(userService.findById(userId));
 
@@ -46,7 +46,7 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         try{
             Address address = dtoToObject(addressUserDTO, findById(id));
 
-            address.setBilled(addressUserDTO.isBilled());
+            address.setIsBilled(addressUserDTO.getIsBilled());
 
             return addressRepository.saveAndFlush(address);
         } catch (EntityNotFoundException e) {

@@ -1,6 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsAddress;
 import jakarta.persistence.*;
@@ -60,7 +61,7 @@ public class Address {
 
     @JsonView(JsonViewsAddress.Billed.class)
     @Column(nullable = false)
-    private boolean isBilled;
+    private Boolean isBilled;
 
     @JsonView(JsonViewsAddress.User.class)
     @ManyToOne

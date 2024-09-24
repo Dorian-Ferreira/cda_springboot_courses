@@ -1,9 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
-import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingUpdateDTO;
-import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
@@ -11,7 +9,6 @@ import fr.human_booster.dorian_ferreira.printemps.repository.LodgingRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,7 +69,7 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
 
         lodging.setCapacity(lodgingUpdateDTO.getCapacity());
         lodging.setDescription(lodgingUpdateDTO.getDescription());
-        lodging.setAccessible(lodgingUpdateDTO.isAccessible());
+        lodging.setIsAccessible(lodgingUpdateDTO.getIsAccessible());
         lodging.setNightPrice(lodgingUpdateDTO.getNightPrice());
 
         return lodging;

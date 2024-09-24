@@ -107,7 +107,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
                     break;
             }
 
-            lodgingCreateDTO.setAccessible(Math.random()>0.5f);
+            lodgingCreateDTO.setIsAccessible(Math.random()>0.5f);
             lodgingCreateDTO.setCapacity(42);
 
             switch ((int) (Math.random() * 5)) {

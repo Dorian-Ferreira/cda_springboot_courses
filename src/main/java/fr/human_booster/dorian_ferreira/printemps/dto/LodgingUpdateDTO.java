@@ -19,7 +19,8 @@ public class LodgingUpdateDTO {
     @Min(1)
     private int capacity;
 
-    private boolean isAccessible;
+    @NotNull
+    private Boolean isAccessible;
 
     @Min(1)
     private int nightPrice;
