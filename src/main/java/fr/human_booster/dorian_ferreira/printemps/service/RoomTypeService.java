@@ -2,6 +2,7 @@ package fr.human_booster.dorian_ferreira.printemps.service;
 
 import fr.human_booster.dorian_ferreira.printemps.dto.RoomTypeDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.RoomTypeRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -33,8 +34,8 @@ public class RoomTypeService implements ServiceDtoInterface<RoomType, RoomTypeDT
         roomTypeRepository.delete(roomType);
     }
 
-    public RoomType findById(Long id) {
-        return roomTypeRepository.findById(id).orElseThrow();
+    public RoomType findById(Long id) throws EntityNotFoundException {
+        return roomTypeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("RoomType"));
     }
 
     public List<RoomType> findAll() {

@@ -2,6 +2,7 @@ package fr.human_booster.dorian_ferreira.printemps.service;
 
 import fr.human_booster.dorian_ferreira.printemps.dto.MediaDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Media;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.MediaRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -17,11 +18,16 @@ public class MediaService implements ServiceDtoInterface<Media, MediaDTO> {
     private LodgingService lodgingService;
 
     public Media create(MediaDTO dto, String lodgingId) {
-        Media media = dtoToObject(dto, new Media());
+        try {
 
-        media.setLodging(lodgingService.findById(lodgingId));
+            Media media = dtoToObject(dto, new Media());
 
-        return mediaRepository.saveAndFlush(media);
+            media.setLodging(lodgingService.findById(lodgingId));
+
+            return mediaRepository.saveAndFlush(media);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
     @Override
@@ -36,8 +42,8 @@ public class MediaService implements ServiceDtoInterface<Media, MediaDTO> {
         mediaRepository.delete(media);
     }
 
-    public Media findById(Long id) {
-        return mediaRepository.findById(id).orElseThrow();
+    public Media findById(Long id) throws EntityNotFoundException {
+        return mediaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Media"));
     }
 
     public List<Media> findAll() {

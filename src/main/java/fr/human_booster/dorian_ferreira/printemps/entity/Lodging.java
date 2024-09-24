@@ -1,5 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsLodging;
 import fr.human_booster.dorian_ferreira.printemps.slugger.SluggerInterface;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -23,52 +25,65 @@ import java.util.List;
 )
 public class Lodging implements SluggerInterface {
 
+    @JsonView(JsonViewsLodging.Uuid.class)
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid;
 
+    @JsonView(JsonViewsLodging.Name.class)
     @NotNull
     @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @JsonView(JsonViewsLodging.Capacity.class)
     @Min(1)
     @Column(nullable = false)
     private int capacity;
 
+    @JsonView(JsonViewsLodging.Accessible.class)
     @Column(nullable = false)
     private boolean isAccessible;
 
+    @JsonView(JsonViewsLodging.NightPrice.class)
     @Min(1)
     @Column(nullable = false)
     private int nightPrice;
 
+    @JsonView(JsonViewsLodging.Description.class)
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @JsonView(JsonViewsLodging.Slug.class)
     @NotNull
     @NotBlank
     @Column(nullable = false)
     private String slug;
 
-    @OneToMany(mappedBy = "lodging")
-    private List<Review> reviews = new ArrayList<>();
-
-    @OneToMany(mappedBy = "lodging")
-    private List<Favorite> favorites = new ArrayList<>();
-
-    @OneToMany(mappedBy = "lodging")
-    private List<Booking> bookings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "lodging")
-    private List<Media> medias = new ArrayList<>();
-
-    @ManyToMany
-    private List<RoomType> roomTypes = new ArrayList<>();
-
+    @JsonView(JsonViewsLodging.Address.class)
     @NotNull
     @OneToOne
     private Address address;
+
+    @JsonView(JsonViewsLodging.Reviews.class)
+    @OneToMany(mappedBy = "lodging")
+    private List<Review> reviews = new ArrayList<>();
+
+    @JsonView(JsonViewsLodging.Favorites.class)
+    @OneToMany(mappedBy = "lodging")
+    private List<Favorite> favorites = new ArrayList<>();
+
+    @JsonView(JsonViewsLodging.Bookings.class)
+    @OneToMany(mappedBy = "lodging")
+    private List<Booking> bookings = new ArrayList<>();
+
+    @JsonView(JsonViewsLodging.Medias.class)
+    @OneToMany(mappedBy = "lodging")
+    private List<Media> medias = new ArrayList<>();
+
+    @JsonView(JsonViewsLodging.RoomTypes.class)
+    @ManyToMany
+    private List<RoomType> roomTypes = new ArrayList<>();
 
     @Override
     public String getField() {

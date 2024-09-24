@@ -10,7 +10,6 @@ import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
@@ -19,10 +18,10 @@ import java.util.Locale;
 public class InitDataLoaderConfig implements CommandLineRunner {
 
     private static final int NB_USERS = 200;
-    private static final int NB_LODGING = 50;
-    private static final int NB_FAVORITE = 80;
-    private static final int NB_BOOKING = 80;
-    private static final int NB_REVIEW = 300;
+    private static final int NB_LODGING = 200;
+    private static final int NB_FAVORITE = 500;
+    private static final int NB_BOOKING = 1000;
+    private static final int NB_REVIEW = 2000;
 
     private final LodgingService lodgingService;
     private final RoomTypeService roomTypeService;
@@ -34,7 +33,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     private static final Faker faker = new Faker(Locale.FRANCE);
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         createUsers();
         createRoom();
@@ -50,17 +49,21 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             return;
 
         for (int i = 0; i < NB_USERS; i++) {
+
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+
             UserCreateDTO userCreateDto = new UserCreateDTO();
             userCreateDto.setPassword("12345");
             userCreateDto.setConfirmPassword("12345");
-            userCreateDto.setEmail(faker.internet().emailAddress());
+            userCreateDto.setEmail(faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase()));
 
             User user = userService.create(userCreateDto);
 
             UserUpdateDTO userUpdateDto = new UserUpdateDTO();
-            userUpdateDto.setBirthAt(LocalDate.now().minusYears((long)(Math.random()*50)));
-            userUpdateDto.setFirstName(faker.name().firstName());
-            userUpdateDto.setLastName(faker.name().lastName());
+            userUpdateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));
+            userUpdateDto.setFirstName(firstName);
+            userUpdateDto.setLastName(lastName);
             userUpdateDto.setPhone(faker.phoneNumber().phoneNumber());
 
             userService.update(userUpdateDto, user.getUuid());
@@ -85,10 +88,46 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             LodgingCreateDTO lodgingCreateDTO = new LodgingCreateDTO();
 
             lodgingCreateDTO.setAddressDTO(addressLodgingDTO);
-            lodgingCreateDTO.setName(faker.cat().name());
-            lodgingCreateDTO.setAccessible(true);
+
+            switch ((int) (Math.random() * 5)) {
+                case 0:
+                    lodgingCreateDTO.setName(faker.funnyName().name());
+                    break;
+                case 1:
+                    lodgingCreateDTO.setName(faker.beer().name());
+                    break;
+                case 2:
+                    lodgingCreateDTO.setName(faker.animal().name());
+                    break;
+                case 3:
+                    lodgingCreateDTO.setName(faker.ancient().god());
+                    break;
+                case 4:
+                    lodgingCreateDTO.setName(faker.harryPotter().character());
+                    break;
+            }
+
+            lodgingCreateDTO.setAccessible(Math.random()>0.5f);
             lodgingCreateDTO.setCapacity(42);
-            lodgingCreateDTO.setDescription(faker.cat().name());
+
+            switch ((int) (Math.random() * 5)) {
+                case 0:
+                    lodgingCreateDTO.setDescription(faker.joke().knockKnock());
+                    break;
+                case 1:
+                    lodgingCreateDTO.setDescription(faker.joke().pun());
+                    break;
+                case 2:
+                    lodgingCreateDTO.setDescription(faker.chuckNorris().fact());
+                    break;
+                case 3:
+                    lodgingCreateDTO.setDescription(faker.yoda().quote());
+                    break;
+                case 4:
+                    lodgingCreateDTO.setDescription(faker.kaamelott().quote());
+                    break;
+            }
+
             lodgingCreateDTO.setNightPrice(4222);
 
             Lodging lodging = lodgingService.create(lodgingCreateDTO);
@@ -174,7 +213,25 @@ public class InitDataLoaderConfig implements CommandLineRunner {
 
             ReviewDTO reviewDTO = new ReviewDTO();
 
-            reviewDTO.setContent(faker.joke().knockKnock());
+            switch ((int) (Math.random() * 5)) {
+                case 0:
+                    reviewDTO.setContent(faker.joke().knockKnock());
+                    break;
+                case 1:
+                    reviewDTO.setContent(faker.joke().pun());
+                    break;
+                case 2:
+                    reviewDTO.setContent(faker.chuckNorris().fact());
+                    break;
+                case 3:
+                    reviewDTO.setContent(faker.yoda().quote());
+                    break;
+                case 4:
+                    reviewDTO.setContent(faker.kaamelott().quote());
+                    break;
+            }
+
+
 
             reviewDTO.setRating((float) (Math.random()*5));
             reviewDTO.setLodgingUuid(lodging);

@@ -3,6 +3,7 @@ package fr.human_booster.dorian_ferreira.printemps.service;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.User;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.UserRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -23,9 +24,13 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
     }
 
     public User update(UserUpdateDTO userDto, String uuid) {
-        User user = dtoUpdateToObject(userDto, findById(uuid));
+        try {
+            User user = dtoUpdateToObject(userDto, findById(uuid));
 
-        return userRepository.saveAndFlush(user);
+            return userRepository.saveAndFlush(user);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
     @Override
@@ -57,8 +62,8 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
         return userRepository.findAll();
     }
 
-    public User findById(String userId) {
-        return userRepository.findById(userId).orElse(null);
+    public User findById(String userId) throws EntityNotFoundException {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User"));
     }
 
     public long count() {

@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressLodgingDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressUserDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -19,13 +20,17 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
     private UserService userService;
 
     public Address create(AddressUserDTO addressUserDTO, String userId) {
-        Address address = dtoToObject(addressUserDTO, new Address());
+        try{
+            Address address = dtoToObject(addressUserDTO, new Address());
 
-        address.setBilled(addressUserDTO.isBilled());
+            address.setBilled(addressUserDTO.isBilled());
 
-        address.setUser(userService.findById(userId));
+            address.setUser(userService.findById(userId));
 
-        return addressRepository.saveAndFlush(address);
+            return addressRepository.saveAndFlush(address);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
     public Address create(AddressLodgingDTO addressDTO) {
@@ -38,11 +43,15 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
     }
 
     public Address update(AddressUserDTO addressUserDTO, Long id) {
-        Address address = dtoToObject(addressUserDTO, findById(id));
+        try{
+            Address address = dtoToObject(addressUserDTO, findById(id));
 
-        address.setBilled(addressUserDTO.isBilled());
+            address.setBilled(addressUserDTO.isBilled());
 
-        return addressRepository.saveAndFlush(address);
+            return addressRepository.saveAndFlush(address);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
     @Override
@@ -58,8 +67,8 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         return address;
     }
 
-    public Address findById(Long id) {
-        return addressRepository.findById(id).orElseThrow();
+    public Address findById(Long id) throws EntityNotFoundException {
+        return addressRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Address"));
     }
 
     public List<Address> findAll() {

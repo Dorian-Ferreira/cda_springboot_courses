@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Favorite;
 import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -41,8 +42,8 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
         favoriteRepository.delete(favorite);
     }
 
-    public Favorite findById(FavoriteId favoriteId) {
-        return favoriteRepository.findById(favoriteId).orElseThrow();
+    public Favorite findById(FavoriteId favoriteId) throws EntityNotFoundException {
+        return favoriteRepository.findById(favoriteId).orElseThrow(() -> new EntityNotFoundException("Favourite"));
     }
 
     public List<Favorite> findAll() {

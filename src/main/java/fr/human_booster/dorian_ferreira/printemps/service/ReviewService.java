@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.ReviewDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Review;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.ReviewRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -28,24 +29,27 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
 
     @Override
     public  Review dtoToObject(ReviewDTO reviewDTO, Review review) {
+        try {
+            review.setCreatedAt(LocalDateTime.now());
 
-        review.setCreatedAt(LocalDateTime.now());
+            review.setRating(reviewDTO.getRating());
+            review.setContent(reviewDTO.getContent());
 
-        review.setRating(reviewDTO.getRating());
-        review.setContent(reviewDTO.getContent());
+            review.setUser(userService.findById(reviewDTO.getUserUuid()));
+            review.setLodging(lodgingService.findById(reviewDTO.getLodgingUuid()));
 
-        review.setUser(userService.findById(reviewDTO.getUserUuid()));
-        review.setLodging(lodgingService.findById(reviewDTO.getLodgingUuid()));
-
-        return review;
+            return review;
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
     public void delete(Review review) {
         reviewRepository.delete(review);
     }
 
-    public Review findById(Long id) {
-        return reviewRepository.findById(id).orElseThrow();
+    public Review findById(Long id) throws EntityNotFoundException {
+        return reviewRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Review"));
     }
 
     public List<Review> findAll() {

@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.BookingDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
 import fr.human_booster.dorian_ferreira.printemps.entity.Booking;
+import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.BookingRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
@@ -46,8 +47,8 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
         bookingRepository.delete(booking);
     }
 
-    public Booking findById(String id) {
-        return bookingRepository.findById(id).orElseThrow();
+    public Booking findById(String id) throws EntityNotFoundException {
+        return bookingRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Booking"));
     }
 
     public List<Booking> findAll() {
