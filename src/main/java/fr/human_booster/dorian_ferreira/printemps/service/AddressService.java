@@ -42,6 +42,15 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         return addressRepository.saveAndFlush(address);
     }
 
+    public Address createInit(AddressLodgingDTO addressDTO) {
+        Address address = dtoToObject(addressDTO, new Address());
+
+        address.setLatitude(addressDTO.getLatitude());
+        address.setLongitude(addressDTO.getLongitude());
+
+        return addressRepository.save(address);
+    }
+
     public Address update(AddressUserDTO addressUserDTO, Long id) {
         try{
             Address address = dtoToObject(addressUserDTO, findById(id));

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -58,7 +59,6 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             userCreateDto.setConfirmPassword("12345");
             userCreateDto.setEmail(faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase()));
 
-            User user = userService.create(userCreateDto);
 
             UserUpdateDTO userUpdateDto = new UserUpdateDTO();
             userUpdateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));
@@ -66,8 +66,10 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             userUpdateDto.setLastName(lastName);
             userUpdateDto.setPhone(faker.phoneNumber().phoneNumber());
 
-            userService.update(userUpdateDto, user.getUuid());
+            userService.createInit(userCreateDto, userUpdateDto);
         }
+
+        userService.flush();
     }
 
     private void createLodging() {
@@ -80,7 +82,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             addressLodgingDTO.setCity(faker.address().city());
             addressLodgingDTO.setNumber(faker.address().streetAddressNumber());
             addressLodgingDTO.setStreet(faker.address().streetName());
-            addressLodgingDTO.setCountry(faker.address().country());
+            addressLodgingDTO.setCountry("France");
             addressLodgingDTO.setZipCode(faker.address().zipCode());
             addressLodgingDTO.setLatitude(10f);
             addressLodgingDTO.setLongitude(10f);
@@ -107,10 +109,10 @@ public class InitDataLoaderConfig implements CommandLineRunner {
                     break;
             }
 
-            lodgingCreateDTO.setIsAccessible(Math.random()>0.5f);
-            lodgingCreateDTO.setCapacity(42);
+            lodgingCreateDTO.setIsAccessible(Math.random()>0.8f);
+            lodgingCreateDTO.setCapacity(faker.number().numberBetween(5, 30));
 
-            switch ((int) (Math.random() * 5)) {
+            switch ((int) Math.floor(Math.random() * 5)) {
                 case 0:
                     lodgingCreateDTO.setDescription(faker.joke().knockKnock());
                     break;
@@ -128,14 +130,15 @@ public class InitDataLoaderConfig implements CommandLineRunner {
                     break;
             }
 
-            lodgingCreateDTO.setNightPrice(4222);
+            lodgingCreateDTO.setNightPrice(faker.number().numberBetween(3000, 30000));
 
-            Lodging lodging = lodgingService.create(lodgingCreateDTO);
+            Lodging lodging = lodgingService.createInit(lodgingCreateDTO);
 
             for (int j = 0; j <= Math.random()*2; j++) {
                 lodgingService.addRoomType(lodging.getUuid(), roomTypeService.getOneRandom());
             }
         }
+        lodgingService.flush();
     }
 
     private void createRoom() {
@@ -175,10 +178,11 @@ public class InitDataLoaderConfig implements CommandLineRunner {
         if(favoriteService.count() >= NB_FAVORITE)
             return;
 
-        for (int i = 0; i < NB_FAVORITE; i++) {
+        while (favoriteService.count() < NB_FAVORITE) {
             FavoriteId favoriteId = new FavoriteId(lodgingService.getOneRandom().getUuid(), userService.getOneRandom().getUuid());
-            favoriteService.create(favoriteId);
+            favoriteService.createInit(favoriteId);
         }
+        favoriteService.flush();
     }
 
     private void createBooking() {
@@ -199,8 +203,10 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             bookingDTO.setUserUuid(user);
             bookingDTO.setLodgingUuid(lodging);
 
-            bookingService.create(bookingDTO);
+            bookingService.createInit(bookingDTO);
         }
+
+        bookingService.flush();
     }
 
     private void createReview() {
@@ -231,13 +237,13 @@ public class InitDataLoaderConfig implements CommandLineRunner {
                     break;
             }
 
-
-
             reviewDTO.setRating((float) (Math.random()*5));
             reviewDTO.setLodgingUuid(lodging);
             reviewDTO.setUserUuid(user);
 
-            reviewService.create(reviewDTO);
+            reviewService.createInit(reviewDTO);
         }
+
+        reviewService.flush();
     }
 }

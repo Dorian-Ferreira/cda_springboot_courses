@@ -16,8 +16,10 @@ public class JsonViewsUser {
     public interface LastName { }
     public interface FirstName { }
     public interface Uuid { }
+    public interface IsAdmin { }
 
     public interface UserShow extends
+            Uuid,
             FirstName,
             LastName,
             Email,

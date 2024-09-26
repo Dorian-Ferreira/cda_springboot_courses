@@ -8,6 +8,9 @@ public class JsonViews {
         JsonViewsBooking.BookingUserShow,
         JsonViewsLodging.LodgingUserShow,
         JsonViewsFavorite.FavoriteUserShow,
-        JsonViewsReview.ReviewUserShow
+        JsonViewsReview.ReviewUserShow,
+        CustomResponse
     {}
+
+    public interface CustomResponse {}
 }

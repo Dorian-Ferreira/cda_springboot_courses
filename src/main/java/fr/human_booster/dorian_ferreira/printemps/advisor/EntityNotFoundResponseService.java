@@ -3,7 +3,7 @@ package fr.human_booster.dorian_ferreira.printemps.advisor;
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.custom_response.CustomResponse;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
-import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsResponse;
+import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViews;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,7 +16,7 @@ public class EntityNotFoundResponseService {
     @ResponseBody
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @JsonView(JsonViewsResponse.Response.class)
+    @JsonView(JsonViews.CustomResponse.class)
     public CustomResponse entityNotFound(EntityNotFoundException exception) {
         CustomResponse customResponse = new CustomResponse();
 

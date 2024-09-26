@@ -60,7 +60,6 @@ public class Address {
     private String more;
 
     @JsonView(JsonViewsAddress.Billed.class)
-    @Column(nullable = false)
     private Boolean isBilled;
 
     @JsonView(JsonViewsAddress.User.class)

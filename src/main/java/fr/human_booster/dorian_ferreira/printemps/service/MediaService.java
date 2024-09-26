@@ -38,8 +38,8 @@ public class MediaService implements ServiceDtoInterface<Media, MediaDTO> {
         return media;
     }
 
-    public void delete(Media media) {
-        mediaRepository.delete(media);
+    public void delete(Long id) {
+        mediaRepository.deleteById(id);
     }
 
     public Media findById(Long id) throws EntityNotFoundException {

@@ -30,8 +30,8 @@ public class RoomTypeService implements ServiceDtoInterface<RoomType, RoomTypeDT
         return roomType;
     }
 
-    public void delete(RoomType roomType) {
-        roomTypeRepository.delete(roomType);
+    public void delete(Long id) {
+        roomTypeRepository.deleteById(id);
     }
 
     public RoomType findById(Long id) throws EntityNotFoundException {

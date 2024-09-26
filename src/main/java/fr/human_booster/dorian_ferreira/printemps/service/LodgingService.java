@@ -37,12 +37,42 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
         return lodgingRepository.saveAndFlush(lodging);
     }
 
+    public Lodging createInit(LodgingCreateDTO lodgingCreateDTO) {
+        Lodging lodging = dtoToObject(lodgingCreateDTO, new Lodging());
+
+        if(lodgingCreateDTO.getAddressId() != null) {
+            try {
+                lodging.setAddress(addressService.findById(lodgingCreateDTO.getAddressId()));
+            } catch (EntityNotFoundException e) {
+                return null;
+            }
+        } else if(lodgingCreateDTO.getAddressDTO() != null){
+            lodging.setAddress(addressService.createInit(lodgingCreateDTO.getAddressDTO()));
+        }
+
+        return lodgingRepository.save(lodging);
+    }
+
     public Lodging update(LodgingUpdateDTO lodgingUpdateDTO, String uuid) {
         try {
             Lodging lodging = dtoToObject(lodgingUpdateDTO, findById(uuid));
             return lodgingRepository.saveAndFlush(lodging);
         } catch (EntityNotFoundException e) {
             return null;
+        }
+    }
+
+    @Transactional
+    public void addRoomTypeInit(String uuid, Long id) {
+        try {
+            Lodging lodging = findById(uuid);
+            RoomType roomType = roomTypeService.findById(id);
+
+            lodging.addRoom(roomType);
+
+            lodgingRepository.save(lodging);
+        } catch (EntityNotFoundException ignored) {
+
         }
     }
 
@@ -76,8 +106,8 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
     }
 
 
-    public void delete(Lodging lodging) {
-        lodgingRepository.delete(lodging);
+    public void delete(String id) {
+        lodgingRepository.deleteById(id);
     }
 
     public List<Lodging> findAll() {
@@ -94,5 +124,9 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
 
     public Lodging getOneRandom() {
         return lodgingRepository.findRandom();
+    }
+
+    public void flush() {
+        lodgingRepository.flush();
     }
 }

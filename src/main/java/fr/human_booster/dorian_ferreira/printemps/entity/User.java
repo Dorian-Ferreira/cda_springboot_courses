@@ -101,4 +101,9 @@ public class User {
                 ", photo='" + photo + '\'' +
                 '}';
     }
+
+    @JsonView(JsonViewsUser.IsAdmin.class)
+    public boolean isAdmin() {
+        return roles.contains("ROLE_ADMIN");
+    }
 }

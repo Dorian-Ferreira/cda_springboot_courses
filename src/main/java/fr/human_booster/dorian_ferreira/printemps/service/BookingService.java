@@ -25,6 +25,16 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
         return bookingRepository.saveAndFlush(booking);
     }
 
+    public Booking createInit(BookingDTO dto) {
+        Booking booking = dtoToObject(dto, new Booking());
+
+        return bookingRepository.save(booking);
+    }
+
+    public void flush() {
+        bookingRepository.flush();
+    }
+
     @Override
     public  Booking dtoToObject(BookingDTO dto, Booking booking) {
         booking.setNumber("Booking" + (bookingRepository.count() + 1));

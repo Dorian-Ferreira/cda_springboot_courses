@@ -1,7 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.custom_response;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsResponse;
+import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViews;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class CustomResponse {
-    @JsonView(JsonViewsResponse.Response.class)
+    @JsonView(JsonViews.CustomResponse.class)
     private int status;
 
-    @JsonView(JsonViewsResponse.Response.class)
+    @JsonView(JsonViews.CustomResponse.class)
     private String entity;
 
-    @JsonView(JsonViewsResponse.Response.class)
+    @JsonView(JsonViews.CustomResponse.class)
     private Object data;
 }

@@ -6,6 +6,7 @@ import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundExcept
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,28 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
         return favoriteRepository.saveAndFlush(favorite);
     }
 
+    public void createInit(FavoriteId favoriteDto) {
+        Favorite favorite = dtoToObject(favoriteDto, new Favorite());
+
+        favorite.setCreatedAt(LocalDateTime.now());
+
+        favoriteRepository.save(favorite);
+    }
+
+    public void flush(){
+        favoriteRepository.flush();
+    }
+
+    public Favorite persist(FavoriteId dto) {
+        try {
+            Favorite favorite = findById(dto);
+            delete(favorite.getId());
+            return null;
+        } catch (Exception ignore) {
+            return create(dto);
+        }
+    }
+
     @Override
     public  Favorite dtoToObject(FavoriteId favoriteDto, Favorite favorite) {
 
@@ -36,8 +59,8 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
         return favorite;
     }
 
-    public void delete(Favorite favorite) {
-        favoriteRepository.delete(favorite);
+    public void delete(FavoriteId favorite) {
+        favoriteRepository.deleteById(favorite);
     }
 
     public Favorite findById(FavoriteId favoriteId) throws EntityNotFoundException {

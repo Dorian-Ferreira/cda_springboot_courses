@@ -25,6 +25,16 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
         return reviewRepository.saveAndFlush(review);
     }
 
+    public Review createInit(ReviewDTO dto) {
+        Review review = dtoToObject(dto, new Review());
+
+        return reviewRepository.save(review);
+    }
+
+    public void flush() {
+        reviewRepository.flush();
+    }
+
     @Override
     public  Review dtoToObject(ReviewDTO reviewDTO, Review review) {
         try {
@@ -42,8 +52,8 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
         }
     }
 
-    public void delete(Review review) {
-        reviewRepository.delete(review);
+    public void delete(Long id) {
+        reviewRepository.deleteById(id);
     }
 
     public Review findById(Long id) throws EntityNotFoundException {
