@@ -37,9 +37,9 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
         }
     }
 
-    public void createInit(UserCreateDTO createDTO, UserUpdateDTO updateDTO) {
+    public User createInit(UserCreateDTO createDTO, UserUpdateDTO updateDTO) {
         User user = dtoUpdateToObject(updateDTO, dtoToObject(createDTO, new User()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void flush() {

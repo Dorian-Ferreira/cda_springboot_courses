@@ -37,6 +37,12 @@ public class Review {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @JsonView(JsonViewsReview.UpdatedAt.class)
+    private LocalDateTime updatedAt;
+
+    @JsonView(JsonViewsReview.DeletedAt.class)
+    private LocalDateTime deletedAt;
+
     @JsonView(JsonViewsReview.User.class)
     @NotNull
     @ManyToOne

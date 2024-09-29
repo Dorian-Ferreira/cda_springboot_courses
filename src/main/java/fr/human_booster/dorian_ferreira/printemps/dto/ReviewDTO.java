@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDTO {
-
     @NotNull
     @NotBlank
     private String content;

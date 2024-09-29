@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.custom_response.CustomResponse;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
-import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
+import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViews;
 import fr.human_booster.dorian_ferreira.printemps.route.UrlRoute;
 import fr.human_booster.dorian_ferreira.printemps.service.FavoriteService;
 import fr.human_booster.dorian_ferreira.printemps.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -36,7 +33,7 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @GetMapping(UrlRoute.USER_CREATE)
+    @PostMapping(UrlRoute.USER_CREATE)
     public CustomResponse create(@RequestBody UserCreateDTO dto) {
         CustomResponse customResponse = new CustomResponse();
 
@@ -48,7 +45,7 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @GetMapping(UrlRoute.USER_EDIT + "/{uuid}")
+    @PostMapping(UrlRoute.USER_EDIT + "/{uuid}")
     public CustomResponse update(@RequestBody UserUpdateDTO dto, @PathVariable String uuid) {
         CustomResponse customResponse = new CustomResponse();
 
@@ -60,8 +57,8 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @GetMapping(UrlRoute.USER_FAVORITE)
-    public CustomResponse addFavorite(@RequestBody FavoriteId dto) {
+    @PostMapping(UrlRoute.USER_FAVORITE)
+    public CustomResponse handleFavorite(@RequestBody UserLodgingId dto) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
@@ -72,7 +69,7 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @GetMapping(UrlRoute.USER_DELETE + "/{uuid}")
+    @DeleteMapping(UrlRoute.USER_DELETE + "/{uuid}")
     public CustomResponse delete(@PathVariable String uuid) {
         CustomResponse customResponse = new CustomResponse();
 

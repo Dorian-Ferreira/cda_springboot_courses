@@ -1,6 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsFavorite;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,13 +12,9 @@ import java.time.LocalDateTime;
 @Entity
 public class Favorite {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-
     @JsonView(JsonViewsFavorite.Id.class)
     @EmbeddedId
-    private FavoriteId id;
+    private UserLodgingId id;
 
     @JsonView(JsonViewsFavorite.CreatedAt.class)
     @NotNull

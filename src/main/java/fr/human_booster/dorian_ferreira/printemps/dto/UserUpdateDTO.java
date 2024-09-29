@@ -25,11 +25,7 @@ public class UserUpdateDTO {
     @NotBlank
     private String phone;
 
-    @NotNull
-    @NotBlank
     private String photo;
 
-    @NotNull
-    @NotBlank
     private LocalDate birthAt;
 }

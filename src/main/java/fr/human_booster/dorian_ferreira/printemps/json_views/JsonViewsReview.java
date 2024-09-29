@@ -7,11 +7,15 @@ public class JsonViewsReview {
     public interface Rating { }
     public interface Content { }
     public interface Id { }
+    public interface UpdatedAt { }
+    public interface DeletedAt { }
 
     public interface ReviewUserShow extends
             Lodging,
             Rating,
             Content,
-            CreatedAt
+            CreatedAt,
+            UpdatedAt
     {}
+
 }

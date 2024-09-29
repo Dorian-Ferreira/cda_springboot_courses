@@ -1,4 +1,4 @@
-package fr.human_booster.dorian_ferreira.printemps.entity;
+package fr.human_booster.dorian_ferreira.printemps.entity.embeddedId;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class FavoriteId implements Serializable {
+public class UserLodgingId implements Serializable {
 
     private String lodgingUuid;
     private String userUuid;

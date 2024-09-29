@@ -21,12 +21,21 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
 
     public Review create(ReviewDTO dto) {
         Review review = dtoToObject(dto, new Review());
+        review.setCreatedAt(LocalDateTime.now());
+
+        return reviewRepository.saveAndFlush(review);
+    }
+
+    public Review update(ReviewDTO dto, Long id) {
+        Review review = dtoToObject(dto, findById(id));
+        review.setUpdatedAt(LocalDateTime.now());
 
         return reviewRepository.saveAndFlush(review);
     }
 
     public Review createInit(ReviewDTO dto) {
         Review review = dtoToObject(dto, new Review());
+        review.setCreatedAt(LocalDateTime.now());
 
         return reviewRepository.save(review);
     }
@@ -38,7 +47,6 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
     @Override
     public  Review dtoToObject(ReviewDTO reviewDTO, Review review) {
         try {
-            review.setCreatedAt(LocalDateTime.now());
 
             review.setRating(reviewDTO.getRating());
             review.setContent(reviewDTO.getContent());
@@ -53,7 +61,12 @@ public class ReviewService implements ServiceDtoInterface<Review, ReviewDTO> {
     }
 
     public void delete(Long id) {
-        reviewRepository.deleteById(id);
+        Review review = findById(id);
+
+        review.setContent("Deleted");
+        review.setDeletedAt(LocalDateTime.now());
+
+        reviewRepository.saveAndFlush(review);
     }
 
     public Review findById(Long id) throws EntityNotFoundException {

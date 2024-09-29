@@ -1,12 +1,12 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
 import fr.human_booster.dorian_ferreira.printemps.entity.Favorite;
-import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
+import fr.human_booster.dorian_ferreira.printemps.entity.User;
+import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,12 +14,12 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId> {
+public class FavoriteService implements ServiceDtoInterface<Favorite, UserLodgingId> {
     private FavoriteRepository favoriteRepository;
     private UserService userService;
     private LodgingService lodgingService;
 
-    public Favorite create(FavoriteId favoriteDto) {
+    public Favorite create(UserLodgingId favoriteDto) {
         Favorite favorite = dtoToObject(favoriteDto, new Favorite());
 
         favorite.setCreatedAt(LocalDateTime.now());
@@ -27,7 +27,7 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
         return favoriteRepository.saveAndFlush(favorite);
     }
 
-    public void createInit(FavoriteId favoriteDto) {
+    public void createInit(UserLodgingId favoriteDto) {
         Favorite favorite = dtoToObject(favoriteDto, new Favorite());
 
         favorite.setCreatedAt(LocalDateTime.now());
@@ -39,32 +39,32 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, FavoriteId
         favoriteRepository.flush();
     }
 
-    public Favorite persist(FavoriteId dto) {
+    public User persist(UserLodgingId dto) {
         try {
             Favorite favorite = findById(dto);
             delete(favorite.getId());
-            return null;
+            return favorite.getUser();
         } catch (Exception ignore) {
-            return create(dto);
+            return create(dto).getUser();
         }
     }
 
     @Override
-    public  Favorite dtoToObject(FavoriteId favoriteDto, Favorite favorite) {
+    public Favorite dtoToObject(UserLodgingId favoriteDto, Favorite favorite) {
 
         favorite.setUser(userService.findById(favoriteDto.getUserUuid()));
         favorite.setLodging(lodgingService.findById(favoriteDto.getLodgingUuid()));
-        favorite.setId(new FavoriteId(favoriteDto.getLodgingUuid(), favoriteDto.getUserUuid()));
+        favorite.setId(favoriteDto);
 
         return favorite;
     }
 
-    public void delete(FavoriteId favorite) {
+    public void delete(UserLodgingId favorite) {
         favoriteRepository.deleteById(favorite);
     }
 
-    public Favorite findById(FavoriteId favoriteId) throws EntityNotFoundException {
-        return favoriteRepository.findById(favoriteId).orElseThrow(() -> new EntityNotFoundException("Favourite"));
+    public Favorite findById(UserLodgingId userLodgingId) throws EntityNotFoundException {
+        return favoriteRepository.findById(userLodgingId).orElseThrow(() -> new EntityNotFoundException("Favourite"));
     }
 
     public List<Favorite> findAll() {

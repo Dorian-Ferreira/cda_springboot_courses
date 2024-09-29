@@ -1,7 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.configuration;
 
 import fr.human_booster.dorian_ferreira.printemps.dto.*;
-import fr.human_booster.dorian_ferreira.printemps.entity.FavoriteId;
+import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
 import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.service.*;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -30,6 +29,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     private final FavoriteService favoriteService;
     private final BookingService bookingService;
     private final ReviewService reviewService;
+    private final AddressService addressService;
 
     private static final Faker faker = new Faker(Locale.FRANCE);
 
@@ -66,17 +66,25 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             userUpdateDto.setLastName(lastName);
             userUpdateDto.setPhone(faker.phoneNumber().phoneNumber());
 
-            userService.createInit(userCreateDto, userUpdateDto);
+            User user = userService.createInit(userCreateDto, userUpdateDto);
+
+            AddressUserDTO addressUserDTO = new AddressUserDTO();
+
+            addressUserDTO.setCity(faker.address().city());
+            addressUserDTO.setNumber(faker.address().streetAddressNumber());
+            addressUserDTO.setStreet(faker.address().streetName());
+            addressUserDTO.setCountry("France");
+            addressUserDTO.setZipCode(faker.address().zipCode());
+            addressUserDTO.setIsBilled(true);
+
+            addressService.create(addressUserDTO, user.getUuid());
         }
 
         userService.flush();
     }
 
     private void createLodging() {
-        if(lodgingService.count() >= NB_LODGING)
-            return;
-
-        for (int i = 0; i < NB_LODGING; i++) {
+        while (lodgingService.count() < NB_LODGING) {
             AddressLodgingDTO addressLodgingDTO = new AddressLodgingDTO();
 
             addressLodgingDTO.setCity(faker.address().city());
@@ -132,7 +140,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
 
             lodgingCreateDTO.setNightPrice(faker.number().numberBetween(3000, 30000));
 
-            Lodging lodging = lodgingService.createInit(lodgingCreateDTO);
+            Lodging lodging = lodgingService.create(lodgingCreateDTO);
 
             for (int j = 0; j <= Math.random()*2; j++) {
                 lodgingService.addRoomType(lodging.getUuid(), roomTypeService.getOneRandom());
@@ -175,21 +183,15 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createFavorite() {
-        if(favoriteService.count() >= NB_FAVORITE)
-            return;
-
         while (favoriteService.count() < NB_FAVORITE) {
-            FavoriteId favoriteId = new FavoriteId(lodgingService.getOneRandom().getUuid(), userService.getOneRandom().getUuid());
-            favoriteService.createInit(favoriteId);
+            UserLodgingId userLodgingId = new UserLodgingId(lodgingService.getOneRandom().getUuid(), userService.getOneRandom().getUuid());
+            favoriteService.createInit(userLodgingId);
         }
         favoriteService.flush();
     }
 
     private void createBooking() {
-        if(bookingService.count() >= NB_BOOKING)
-            return;
-
-        for (int i = 0; i < NB_BOOKING; i++) {
+        while (bookingService.count() > NB_BOOKING) {
             String lodging = lodgingService.getOneRandom().getUuid();
             String user = userService.getOneRandom().getUuid();
 
@@ -210,10 +212,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createReview() {
-        if(reviewService.count() >= NB_REVIEW)
-            return;
-
-        for (int i = 0; i < NB_REVIEW; i++) {
+        while (reviewService.count() < NB_REVIEW) {
             String lodging = lodgingService.getOneRandom().getUuid();
             String user = userService.getOneRandom().getUuid();
 

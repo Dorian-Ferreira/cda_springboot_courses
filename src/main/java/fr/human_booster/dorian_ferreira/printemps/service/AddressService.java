@@ -33,6 +33,20 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         }
     }
 
+    public Address createInit(AddressUserDTO addressUserDTO, String userId) {
+        try{
+            Address address = dtoToObject(addressUserDTO, new Address());
+
+            address.setIsBilled(addressUserDTO.getIsBilled());
+
+            address.setUser(userService.findById(userId));
+
+            return addressRepository.save(address);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
+    }
+
     public Address create(AddressLodgingDTO addressDTO) {
         Address address = dtoToObject(addressDTO, new Address());
 
