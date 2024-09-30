@@ -9,6 +9,7 @@ import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViews;
 import fr.human_booster.dorian_ferreira.printemps.route.UrlRoute;
 import fr.human_booster.dorian_ferreira.printemps.service.FavoriteService;
 import fr.human_booster.dorian_ferreira.printemps.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class UserRestController {
 
     @JsonView(JsonViews.UserShow.class)
     @PostMapping(UrlRoute.USER_CREATE)
-    public CustomResponse create(@RequestBody UserCreateDTO dto) {
+    public CustomResponse create(@Valid @RequestBody UserCreateDTO dto) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.CREATED.value());
@@ -46,7 +47,7 @@ public class UserRestController {
 
     @JsonView(JsonViews.UserShow.class)
     @PostMapping(UrlRoute.USER_EDIT + "/{uuid}")
-    public CustomResponse update(@RequestBody UserUpdateDTO dto, @PathVariable String uuid) {
+    public CustomResponse update(@Valid @RequestBody UserUpdateDTO dto, @PathVariable String uuid) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
@@ -58,7 +59,7 @@ public class UserRestController {
 
     @JsonView(JsonViews.UserShow.class)
     @PostMapping(UrlRoute.USER_FAVORITE)
-    public CustomResponse handleFavorite(@RequestBody UserLodgingId dto) {
+    public CustomResponse handleFavorite(@Valid @RequestBody UserLodgingId dto) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
