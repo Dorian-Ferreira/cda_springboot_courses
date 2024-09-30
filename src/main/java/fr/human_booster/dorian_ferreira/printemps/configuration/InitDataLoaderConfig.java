@@ -46,19 +46,14 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createUsers() {
-        if(userService.count() >= NB_USERS)
-            return;
-
-        for (int i = 0; i < NB_USERS; i++) {
-
+        while (userService.count() < NB_USERS) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
 
             UserCreateDTO userCreateDto = new UserCreateDTO();
             userCreateDto.setPassword("12345");
-            userCreateDto.setConfirmPassword("12345");
-            userCreateDto.setEmail(faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase()));
 
+            userCreateDto.setEmail(faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase().replaceAll(" ", "_")));
 
             UserUpdateDTO userUpdateDto = new UserUpdateDTO();
             userUpdateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));

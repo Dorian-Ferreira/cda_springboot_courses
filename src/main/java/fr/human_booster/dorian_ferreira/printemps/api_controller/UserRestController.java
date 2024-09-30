@@ -34,13 +34,13 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @PostMapping(UrlRoute.USER_CREATE)
-    public CustomResponse create(@Valid @RequestBody UserCreateDTO dto) {
+    @GetMapping(UrlRoute.USER_ACTIVATION + "/{activationCode}")
+    public CustomResponse activate(@PathVariable String activationCode) {
         CustomResponse customResponse = new CustomResponse();
 
-        customResponse.setStatus(HttpStatus.CREATED.value());
+        customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("User");
-        customResponse.setData(userService.create(dto));
+        customResponse.setData(userService.activate(activationCode));
 
         return customResponse;
     }

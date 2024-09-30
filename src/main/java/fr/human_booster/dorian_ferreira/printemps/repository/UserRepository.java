@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT u FROM User AS u ORDER BY RAND() LIMIT 1")
     User findRandom();
 
+    Optional<User> findByActivationCode(String activationCode);
+    Optional<User> findByEmail(String email);
 }

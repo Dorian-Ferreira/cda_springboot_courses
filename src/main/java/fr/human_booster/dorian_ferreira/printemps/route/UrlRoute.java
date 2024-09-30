@@ -17,6 +17,7 @@ public class UrlRoute {
     public final static String DELETE = "/delete";
 
     public final static String USER_CREATE = BASE_USER + CREATE;
+    public final static String USER_ACTIVATION = BASE_USER + "/activation";
     public final static String USER_EDIT = BASE_USER + EDIT;
     public final static String USER_DELETE = BASE_USER + DELETE;
     public final static String USER_FAVORITE = BASE_USER + "/favorite";

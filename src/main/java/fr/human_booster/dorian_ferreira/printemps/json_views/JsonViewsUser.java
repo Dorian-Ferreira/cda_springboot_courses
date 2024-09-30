@@ -17,6 +17,8 @@ public class JsonViewsUser {
     public interface FirstName { }
     public interface Uuid { }
     public interface IsAdmin { }
+    public interface ActivationCode { }
+    public interface ActivationTimeout { }
 
     public interface UserShow extends
             Uuid,

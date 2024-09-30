@@ -4,25 +4,37 @@ import fr.human_booster.dorian_ferreira.printemps.dto.UserCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
+import fr.human_booster.dorian_ferreira.printemps.exception.ExpiredCodeException;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.UserRepository;
 import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
+public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, UserDetailsService {
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
     private final AddressRepository addressRepository;
 
+    private BCryptPasswordEncoder passwordEncoder;
+
     public User create(UserCreateDTO userDto) {
         User user = dtoToObject(userDto, new User());
+
+        user.setActivationCode(UUID.randomUUID().toString());
+        user.setActivationTimeout(LocalDateTime.now().plusMinutes(15));
 
         return userRepository.saveAndFlush(user);
     }
@@ -49,7 +61,7 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
     @Override
     public User dtoToObject(UserCreateDTO userCreateDTO, User user) {
         user.setEmail(userCreateDTO.getEmail());
-        user.setPassword(userCreateDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
 
         user.setRoles("[\"ROLE_USER\"]");
         user.setCreatedAt(LocalDateTime.now());
@@ -103,5 +115,37 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO> {
 
     public User getOneRandom() {
         return userRepository.findRandom();
+    }
+
+    public User activate(String activationCode) {
+        User user = userRepository.findByActivationCode(activationCode).orElseThrow(ExpiredCodeException::new);
+
+        if(user.getActivationTimeout().isAfter(LocalDateTime.now())) {
+            throw new ExpiredCodeException();
+        }
+
+        user.setActivationCode(null);
+
+        return user;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findByEmail(username);
+        optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = optionalUser.get();
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                userGrantedAuthority(user.getRoles())
+        );
+    }
+
+    private List<GrantedAuthority> userGrantedAuthority(String role) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        List<String> roles = Collections.singletonList(role);
+        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
+        return authorities;
     }
 }
