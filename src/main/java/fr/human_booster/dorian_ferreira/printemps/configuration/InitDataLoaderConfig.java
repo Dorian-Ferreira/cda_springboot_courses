@@ -11,6 +11,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Configuration
@@ -46,14 +48,23 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createUsers() {
-        while (userService.count() < NB_USERS) {
+        List<String> emails = new ArrayList<>();
+
+        long nbLoop = NB_USERS - userService.count();
+        for (int i = 0; i < nbLoop; i++) {
             String firstName = faker.name().firstName();
             String lastName = faker.name().lastName();
 
             UserCreateDTO userCreateDto = new UserCreateDTO();
             userCreateDto.setPassword("12345");
 
-            userCreateDto.setEmail(faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase().replaceAll(" ", "_")));
+            String emailStart = faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase().replaceAll(" ", "_"));
+            if(emails.contains(emailStart)) {
+                i--;
+                continue;
+            }
+            userCreateDto.setEmail(emailStart);
+            emails.add(emailStart);
 
             UserUpdateDTO userUpdateDto = new UserUpdateDTO();
             userUpdateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));
@@ -79,7 +90,8 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createLodging() {
-        while (lodgingService.count() < NB_LODGING) {
+        long nbLoop = NB_LODGING - lodgingService.count();
+        for (int i = 0; i < nbLoop; i++) {
             AddressLodgingDTO addressLodgingDTO = new AddressLodgingDTO();
 
             addressLodgingDTO.setCity(faker.address().city());
@@ -186,7 +198,8 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createBooking() {
-        while (bookingService.count() > NB_BOOKING) {
+        long nbLoop = NB_BOOKING - bookingService.count();
+        for (int i = 0; i < nbLoop; i++) {
             String lodging = lodgingService.getOneRandom().getUuid();
             String user = userService.getOneRandom().getUuid();
 
@@ -207,7 +220,8 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createReview() {
-        while (reviewService.count() < NB_REVIEW) {
+        long nbLoop = NB_REVIEW - reviewService.count();
+        for (int i = 0; i < nbLoop; i++) {
             String lodging = lodgingService.getOneRandom().getUuid();
             String user = userService.getOneRandom().getUuid();
 
