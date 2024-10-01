@@ -3,6 +3,7 @@ package fr.human_booster.dorian_ferreira.printemps.api_controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.custom_response.CustomResponse;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingCreateDTO;
+import fr.human_booster.dorian_ferreira.printemps.dto.LodgingSearchDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
@@ -30,6 +31,30 @@ public class LodgingRestController {
         customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("Lodging");
         customResponse.setData(lodgingService.findAllOpen());
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.LodgingList.class)
+    @GetMapping(UrlRoute.LODGING_SEARCH + "/{name}")
+    public CustomResponse searchByName(@PathVariable String name) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(lodgingService.findAllOpenByName(name));
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.LodgingList.class)
+    @PostMapping(UrlRoute.LODGING_SEARCH)
+    public CustomResponse searchAll(@RequestBody LodgingSearchDTO lodgingSearchDTO) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(lodgingService.searchAllOpen(lodgingSearchDTO));
 
         return customResponse;
     }

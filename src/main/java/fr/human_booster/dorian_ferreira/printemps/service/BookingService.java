@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.BookingDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.BookingLoggedDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Booking;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
+import fr.human_booster.dorian_ferreira.printemps.exception.LodgingUnavailableException;
 import fr.human_booster.dorian_ferreira.printemps.repository.BookingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,10 @@ public class BookingService {
         Booking booking = dtoToObject(dto, new Booking());
         booking.setUser(userService.findByEmail(principal.getName()));
 
-        return bookingRepository.saveAndFlush(booking);
+        if(isAvailable(dto)) {
+            return bookingRepository.saveAndFlush(booking);
+        }
+        throw new LodgingUnavailableException();
     }
 
     public Booking createInit(BookingDTO dto) {
@@ -37,6 +41,14 @@ public class BookingService {
 
     public void flush() {
         bookingRepository.flush();
+    }
+
+    public Boolean isAvailable(BookingLoggedDTO bookingLoggedDTO) {
+        return lodgingService.isAvailable(
+                lodgingService.findById(bookingLoggedDTO.getLodgingUuid()),
+                bookingLoggedDTO.getStartedAt(),
+                bookingLoggedDTO.getFinishedAt(),
+                bookingLoggedDTO.getQuantity());
     }
 
     public  Booking dtoToObject(BookingLoggedDTO dto, Booking booking) {

@@ -7,6 +7,7 @@ public class UrlRoute {
     public final static String CREATE = "/create";
     public final static String EDIT = "/edit";
     public final static String DELETE = "/delete";
+    public final static String SEARCH = "/search";
 
     public final static String LOGIN = BASE_API + "/login";
     public final static String REGISTER = BASE_API + "/register";
@@ -30,6 +31,7 @@ public class UrlRoute {
     public final static String LODGING_CREATE = BASE_LODGING + CREATE;
     public final static String LODGING_EDIT = BASE_LODGING + EDIT;
     public final static String LODGING_DELETE = BASE_LODGING + DELETE;
+    public final static String LODGING_SEARCH = BASE_LODGING + SEARCH;
 
     public final static String REVIEW_CREATE = BASE_REVIEW + CREATE;
     public final static String REVIEW_EDIT = BASE_REVIEW + EDIT;

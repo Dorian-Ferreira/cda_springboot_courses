@@ -1,6 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingCreateDTO;
+import fr.human_booster.dorian_ferreira.printemps.dto.LodgingSearchDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.LodgingUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
@@ -121,11 +122,31 @@ public class LodgingService {
     }
 
     public List<Lodging> findAllOpen() {
-        return lodgingRepository.findAllByIsOpen(true);
+        return lodgingRepository.findAllByIsOpenIsTrue();
+    }
+
+    public List<Lodging> searchAllOpen(LodgingSearchDTO lodgingSearchDTO) {
+        return
+            (lodgingSearchDTO.getIsAccessible() == null || !lodgingSearchDTO.getIsAccessible()) ?
+                lodgingRepository.findAllBySearch(
+                    lodgingSearchDTO.getStartDate() != null ? lodgingSearchDTO.getStartDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getEndDate() != null ? lodgingSearchDTO.getEndDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getStartDate() != null ? lodgingSearchDTO.getStartDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getEndDate() != null ? lodgingSearchDTO.getEndDate().atStartOfDay() : null,
+                    (lodgingSearchDTO.getNightPrice() == null || lodgingSearchDTO.getNightPrice() <= 0) ? Integer.MAX_VALUE : lodgingSearchDTO.getNightPrice(),
+                    (lodgingSearchDTO.getCapacity() == null || lodgingSearchDTO.getCapacity() <=0) ? 1 : lodgingSearchDTO.getCapacity()
+                ) : lodgingRepository.findAllAccessibleBySearch(
+                    lodgingSearchDTO.getStartDate() != null ? lodgingSearchDTO.getStartDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getEndDate() != null ? lodgingSearchDTO.getEndDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getStartDate() != null ? lodgingSearchDTO.getStartDate().atStartOfDay() : null,
+                    lodgingSearchDTO.getEndDate() != null ? lodgingSearchDTO.getEndDate().atStartOfDay() : null,
+                    (lodgingSearchDTO.getNightPrice() == null || lodgingSearchDTO.getNightPrice() <= 0) ? Integer.MAX_VALUE : lodgingSearchDTO.getNightPrice(),
+                    (lodgingSearchDTO.getCapacity() == null || lodgingSearchDTO.getCapacity() <=0) ? 1 : lodgingSearchDTO.getCapacity()
+                );
     }
 
     public Lodging findById(String lodgingId) {
-        return lodgingRepository.findByUuidAndIsOpen(lodgingId, true).orElseThrow(() -> new EntityNotFoundException("Lodging"));
+        return lodgingRepository.findByUuidAndIsOpenIsTrue(lodgingId).orElseThrow(() -> new EntityNotFoundException("Lodging"));
     }
 
     public long count() {
@@ -142,5 +163,19 @@ public class LodgingService {
 
     public Lodging findBySlug(String slug) {
         return lodgingRepository.findBySlug(slug).orElseThrow(() -> new EntityNotFoundException("Lodging"));
+    }
+
+    public List<Lodging> findAllOpenByName(String name) {
+        return lodgingRepository.findAllByIsOpenIsTrueAndNameContainingIgnoreCase(name);
+    }
+
+    public Boolean isAvailable(Lodging lodging, LocalDateTime startedAt, LocalDateTime finishedAt, int quantity) {
+        return lodgingRepository.findAllBySearch(
+                startedAt,
+                finishedAt,
+                startedAt,
+                finishedAt,
+                quantity)
+            .contains(lodging);
     }
 }
