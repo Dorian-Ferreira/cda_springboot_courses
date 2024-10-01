@@ -18,4 +18,24 @@ public class JsonViewsReview {
             UpdatedAt
     {}
 
+    public interface ReviewLodgingShow extends
+            User,
+            Rating,
+            Content,
+            CreatedAt,
+            UpdatedAt
+    {}
+
+    public interface ReviewShow extends
+            User,
+            JsonViewsUser.UserSimpleShow,
+
+            Lodging,
+            JsonViewsLodging.LodgingSimpleShow,
+
+            Rating,
+            Content,
+            CreatedAt,
+            UpdatedAt
+    { }
 }

@@ -6,16 +6,16 @@ import fr.human_booster.dorian_ferreira.printemps.entity.Lodging;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.LodgingRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdateDTO> {
+public class LodgingService {
 
     private LodgingRepository lodgingRepository;
     private AddressService addressService;
@@ -23,6 +23,7 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
 
     public Lodging create(LodgingCreateDTO lodgingCreateDTO) {
         Lodging lodging = dtoToObject(lodgingCreateDTO, new Lodging());
+        lodging.setIsOpen(true);
 
         if(lodgingCreateDTO.getAddressId() != null) {
             try {
@@ -39,6 +40,7 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
 
     public Lodging createInit(LodgingCreateDTO lodgingCreateDTO) {
         Lodging lodging = dtoToObject(lodgingCreateDTO, new Lodging());
+        lodging.setIsOpen(true);
 
         if(lodgingCreateDTO.getAddressId() != null) {
             try {
@@ -90,7 +92,6 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
         }
     }
 
-    @Override
     public  Lodging dtoToObject(LodgingUpdateDTO lodgingUpdateDTO, Lodging lodging) {
         lodging.setName(lodgingUpdateDTO.getName());
 
@@ -106,16 +107,25 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
     }
 
 
-    public void delete(String id) {
-        lodgingRepository.deleteById(id);
+    public boolean delete(String id) {
+        Lodging lodging = findById(id);
+
+        lodging.setIsOpen(false);
+        lodgingRepository.saveAndFlush(lodging);
+
+        return true;
     }
 
     public List<Lodging> findAll() {
         return lodgingRepository.findAll();
     }
 
-    public Lodging findById(String lodgingId) throws EntityNotFoundException {
-        return lodgingRepository.findById(lodgingId).orElseThrow(() -> new EntityNotFoundException("Lodging"));
+    public List<Lodging> findAllOpen() {
+        return lodgingRepository.findAllByIsOpen(true);
+    }
+
+    public Lodging findById(String lodgingId) {
+        return lodgingRepository.findByUuidAndIsOpen(lodgingId, true).orElseThrow(() -> new EntityNotFoundException("Lodging"));
     }
 
     public long count() {
@@ -128,5 +138,9 @@ public class LodgingService implements ServiceDtoInterface<Lodging, LodgingUpdat
 
     public void flush() {
         lodgingRepository.flush();
+    }
+
+    public Lodging findBySlug(String slug) {
+        return lodgingRepository.findBySlug(slug).orElseThrow(() -> new EntityNotFoundException("Lodging"));
     }
 }

@@ -14,11 +14,28 @@ public class JsonViewsAddress {
     public interface Id {}
 
     public interface AddressUserShow extends
+            Id,
             Country,
             City,
             ZipCode,
             Street,
             Number,
+            More,
             Billed
     {}
+
+    public interface AddressShow extends
+            Country,
+            City,
+            ZipCode,
+            Street,
+            Number,
+            More,
+            Longitude,
+            Latitude
+    {}
+
+    public interface AddressLodgingList extends
+            Country
+    { }
 }

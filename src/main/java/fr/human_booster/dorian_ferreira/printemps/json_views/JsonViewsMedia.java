@@ -5,4 +5,10 @@ public class JsonViewsMedia {
     public interface Extension { }
     public interface Path { }
     public interface Id { }
+
+
+    public interface MediaLodgingShow extends
+        Path,
+        Extension
+    {}
 }

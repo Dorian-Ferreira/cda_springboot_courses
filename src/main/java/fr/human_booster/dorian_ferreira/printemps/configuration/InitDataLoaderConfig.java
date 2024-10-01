@@ -57,6 +57,9 @@ public class InitDataLoaderConfig implements CommandLineRunner {
 
             UserCreateDTO userCreateDto = new UserCreateDTO();
             userCreateDto.setPassword("12345");
+            userCreateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));
+            userCreateDto.setFirstName(firstName);
+            userCreateDto.setLastName(lastName);
 
             String emailStart = faker.internet().emailAddress(firstName.toLowerCase() + "." + lastName.toLowerCase().replaceAll(" ", "_"));
             if(emails.contains(emailStart)) {
@@ -67,7 +70,6 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             emails.add(emailStart);
 
             UserUpdateDTO userUpdateDto = new UserUpdateDTO();
-            userUpdateDto.setBirthAt(faker.timeAndDate().birthday(18, 65));
             userUpdateDto.setFirstName(firstName);
             userUpdateDto.setLastName(lastName);
             userUpdateDto.setPhone(faker.phoneNumber().phoneNumber());
@@ -86,10 +88,15 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             addressService.create(addressUserDTO, user.getUuid());
         }
 
-        userService.flush();
+        try {
+            userService.upgradeToAdmin(userService.findByEmail(emails.getFirst()).getUuid());
+        } catch (Exception ignore) {
+
+        }
     }
 
     private void createLodging() {
+        List<String> names = new ArrayList<>();
         long nbLoop = NB_LODGING - lodgingService.count();
         for (int i = 0; i < nbLoop; i++) {
             AddressLodgingDTO addressLodgingDTO = new AddressLodgingDTO();
@@ -123,6 +130,13 @@ public class InitDataLoaderConfig implements CommandLineRunner {
                     lodgingCreateDTO.setName(faker.harryPotter().character());
                     break;
             }
+
+            if(names.contains(lodgingCreateDTO.getName())) {
+                i--;
+                continue;
+            }
+
+            names.add(lodgingCreateDTO.getName());
 
             lodgingCreateDTO.setIsAccessible(Math.random()>0.8f);
             lodgingCreateDTO.setCapacity(faker.number().numberBetween(5, 30));
@@ -210,6 +224,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             bookingDTO.setStartedAt(LocalDateTime.now().minusYears(randomYear).minusDays(2));
             bookingDTO.setFinishedAt(LocalDateTime.now().minusYears(randomYear).plusDays(4));
             bookingDTO.setQuantity((int) (Math.random()*8)+1);
+
             bookingDTO.setUserUuid(user);
             bookingDTO.setLodgingUuid(lodging);
 

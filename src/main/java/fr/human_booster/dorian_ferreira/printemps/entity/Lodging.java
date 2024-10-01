@@ -46,6 +46,10 @@ public class Lodging implements SluggerInterface {
     @Column(nullable = false)
     private Boolean isAccessible;
 
+    @JsonView(JsonViewsLodging.Open.class)
+    @Column(nullable = false)
+    private Boolean isOpen;
+
     @JsonView(JsonViewsLodging.NightPrice.class)
     @Min(1)
     @Column(nullable = false)

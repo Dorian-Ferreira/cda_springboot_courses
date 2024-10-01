@@ -116,6 +116,10 @@ public class User implements UserDetails {
         return roles.contains("ROLE_ADMIN");
     }
 
+    public boolean isActive() {
+        return activationCode == null;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -143,6 +147,10 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return activationCode == null;
+        return isActive();
+    }
+
+    public void addAddress(Address address) {
+        addresses.add(address);
     }
 }

@@ -2,6 +2,7 @@ package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsBooking;
+import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsLodging;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -49,16 +50,18 @@ public class Booking {
     @Column(nullable = false)
     private int quantity;
 
+    @JsonView(JsonViewsBooking.Canceled.class)
+    @Column(nullable = false)
+    private Boolean isCanceled;
+
     @JsonView(JsonViewsBooking.Lodging.class)
     @NotNull
-    @NotBlank
     @ManyToOne
     @JoinColumn(nullable = false)
     private Lodging lodging;
 
     @JsonView(JsonViewsBooking.User.class)
     @NotNull
-    @NotBlank
     @ManyToOne
     @JoinColumn(nullable = false)
     private User user;

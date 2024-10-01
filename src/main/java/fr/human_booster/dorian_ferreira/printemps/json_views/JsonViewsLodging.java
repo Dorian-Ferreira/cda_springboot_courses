@@ -14,9 +14,9 @@ public class JsonViewsLodging {
     public interface Capacity { }
     public interface Name { }
     public interface Uuid { }
+    public interface Open { }
 
     public interface LodgingUserShow extends
-            Uuid,
             Name,
             Slug,
             Description,
@@ -24,5 +24,40 @@ public class JsonViewsLodging {
             NightPrice,
             Capacity,
             Address
-    {}
+    { }
+
+    public interface LodgingList extends
+            JsonViewsLodging.Name,
+            JsonViewsLodging.Slug,
+            JsonViewsLodging.Capacity,
+            JsonViewsLodging.Accessible,
+            JsonViewsLodging.NightPrice
+    { }
+
+    public interface LodgingShow extends
+            JsonViewsLodging.Uuid,
+            JsonViewsLodging.Name,
+            JsonViewsLodging.Slug,
+            JsonViewsLodging.Capacity,
+            JsonViewsLodging.Accessible,
+            JsonViewsLodging.NightPrice,
+            JsonViewsLodging.Description,
+
+            JsonViewsLodging.Address,
+            JsonViewsAddress.AddressShow,
+
+            JsonViewsLodging.RoomTypes,
+            JsonViewsRoomType.RoomTypeShow,
+
+            JsonViewsLodging.Medias,
+            JsonViewsMedia.MediaLodgingShow,
+
+            JsonViewsLodging.Reviews,
+            JsonViewsReview.ReviewLodgingShow
+    { }
+
+    public interface LodgingSimpleShow extends
+            JsonViewsLodging.Name,
+            JsonViewsLodging.Slug
+    { }
 }

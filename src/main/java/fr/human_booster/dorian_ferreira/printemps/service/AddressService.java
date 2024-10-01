@@ -4,30 +4,45 @@ import fr.human_booster.dorian_ferreira.printemps.dto.AddressDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressLodgingDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.AddressUserDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Address;
+import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class AddressService implements ServiceDtoInterface<Address, AddressDTO> {
+public class AddressService {
 
     private AddressRepository addressRepository;
     private UserService userService;
 
-    public Address create(AddressUserDTO addressUserDTO, String userId) {
+    public User create(AddressUserDTO addressUserDTO, String userId) {
         try{
             Address address = dtoToObject(addressUserDTO, new Address());
 
             address.setIsBilled(addressUserDTO.getIsBilled());
 
             address.setUser(userService.findById(userId));
+            addressRepository.saveAndFlush(address);
+            return address.getUser();
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
+    }
 
-            return addressRepository.saveAndFlush(address);
+    public User create(AddressUserDTO addressUserDTO, Principal principal) {
+        try{
+            Address address = dtoToObject(addressUserDTO, new Address());
+
+            address.setIsBilled(addressUserDTO.getIsBilled());
+
+            address.setUser(userService.findByEmail(principal.getName()));
+            addressRepository.saveAndFlush(address);
+            return address.getUser();
         } catch (EntityNotFoundException e) {
             return null;
         }
@@ -77,7 +92,6 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
         }
     }
 
-    @Override
     public Address dtoToObject(AddressDTO addressUserDTO, Address address) {
         address.setStreet(addressUserDTO.getStreet());
         address.setNumber(addressUserDTO.getNumber());
@@ -96,5 +110,13 @@ public class AddressService implements ServiceDtoInterface<Address, AddressDTO> 
 
     public List<Address> findAll() {
         return addressRepository.findAll();
+    }
+
+    public User delete(Long id) {
+        Address address = findById(id);
+
+        addressRepository.delete(address);
+
+        return address.getUser();
     }
 }

@@ -1,32 +1,36 @@
 package fr.human_booster.dorian_ferreira.printemps.service;
 
 import fr.human_booster.dorian_ferreira.printemps.dto.BookingDTO;
+import fr.human_booster.dorian_ferreira.printemps.dto.BookingLoggedDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Booking;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.BookingRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> {
+public class BookingService {
 
     private BookingRepository bookingRepository;
     private UserService userService;
     private LodgingService lodgingService;
 
-    public Booking create(BookingDTO dto) {
+    public Booking create(BookingLoggedDTO dto, Principal principal) {
         Booking booking = dtoToObject(dto, new Booking());
+        booking.setUser(userService.findByEmail(principal.getName()));
 
         return bookingRepository.saveAndFlush(booking);
     }
 
     public Booking createInit(BookingDTO dto) {
         Booking booking = dtoToObject(dto, new Booking());
+
+        booking.setUser(userService.findById(dto.getUserUuid()));
 
         return bookingRepository.save(booking);
     }
@@ -35,9 +39,10 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
         bookingRepository.flush();
     }
 
-    @Override
-    public  Booking dtoToObject(BookingDTO dto, Booking booking) {
+    public  Booking dtoToObject(BookingLoggedDTO dto, Booking booking) {
         booking.setNumber("Booking" + (bookingRepository.count() + 1));
+
+        booking.setIsCanceled(false);
 
         booking.setCreatedAt(LocalDateTime.now());
 
@@ -45,14 +50,22 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
         booking.setFinishedAt(dto.getFinishedAt());
         booking.setQuantity(dto.getQuantity());
 
-        booking.setUser(userService.findById(dto.getUserUuid()));
         booking.setLodging(lodgingService.findById(dto.getLodgingUuid()));
 
         return booking;
     }
 
-    public void delete(Booking booking) {
-        bookingRepository.delete(booking);
+    public boolean delete(String uuid) {
+        Booking booking = findById(uuid);
+
+        if(booking.getStartedAt().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        booking.setIsCanceled(true);
+
+        bookingRepository.saveAndFlush(booking);
+        return true;
     }
 
     public Booking findById(String id) throws EntityNotFoundException {
@@ -65,5 +78,9 @@ public class BookingService implements ServiceDtoInterface<Booking, BookingDTO> 
 
     public long count() {
         return bookingRepository.count();
+    }
+
+    public List<Booking> findAllByLodging(String uuid) {
+        return bookingRepository.findAllByLodgingUuidAndIsCanceledNullAndStartedAtAfter(uuid, LocalDateTime.now());
     }
 }

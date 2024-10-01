@@ -5,4 +5,10 @@ public class JsonViewsRoomType {
     public interface Type { }
     public interface TranslationKey { }
     public interface Id { }
+
+    public interface RoomTypeShow extends
+            Id,
+            Type,
+            TranslationKey
+    {}
 }

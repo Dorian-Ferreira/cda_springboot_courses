@@ -4,7 +4,6 @@ import fr.human_booster.dorian_ferreira.printemps.dto.RoomTypeDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.RoomTypeRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class RoomTypeService implements ServiceDtoInterface<RoomType, RoomTypeDTO> {
+public class RoomTypeService {
 
     private RoomTypeRepository roomTypeRepository;
 
@@ -22,7 +21,6 @@ public class RoomTypeService implements ServiceDtoInterface<RoomType, RoomTypeDT
         return roomTypeRepository.saveAndFlush(roomType);
     }
 
-    @Override
     public RoomType dtoToObject(RoomTypeDTO roomTypeDTO, RoomType roomType) {
         roomType.setType(roomTypeDTO.getType());
         roomType.setTranslationKey(roomTypeDTO.getTranslationKey());

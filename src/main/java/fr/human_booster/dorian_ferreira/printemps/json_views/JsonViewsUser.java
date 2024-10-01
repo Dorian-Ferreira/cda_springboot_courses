@@ -41,4 +41,10 @@ public class JsonViewsUser {
             Reviews,
             JsonViewsReview.ReviewUserShow
     {}
+
+    public interface UserSimpleShow extends
+            Uuid,
+            FirstName,
+            LastName
+    { }
 }

@@ -3,12 +3,12 @@ package fr.human_booster.dorian_ferreira.printemps.service;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserCreateDTO;
 import fr.human_booster.dorian_ferreira.printemps.dto.UserUpdateDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.User;
+import fr.human_booster.dorian_ferreira.printemps.exception.AlreadyActiveException;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.exception.ExpiredCodeException;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.UserRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,12 +18,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @AllArgsConstructor
-public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, UserDetailsService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
     private final AddressRepository addressRepository;
@@ -49,6 +50,16 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
         }
     }
 
+    public User update(UserUpdateDTO userDto, Principal principal) {
+        try {
+            User user = dtoUpdateToObject(userDto, findByEmail(principal.getName()));
+
+            return userRepository.saveAndFlush(user);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
+    }
+
     public User createInit(UserCreateDTO createDTO, UserUpdateDTO updateDTO) {
         User user = dtoUpdateToObject(updateDTO, dtoToObject(createDTO, new User()));
         return userRepository.save(user);
@@ -58,10 +69,13 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
         userRepository.flush();
     }
 
-    @Override
     public User dtoToObject(UserCreateDTO userCreateDTO, User user) {
         user.setEmail(userCreateDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
+
+        user.setBirthAt(userCreateDTO.getBirthAt());
+        user.setFirstName(userCreateDTO.getFirstName());
+        user.setLastName(userCreateDTO.getLastName());
 
         user.setRoles("[\"ROLE_USER\"]");
         user.setCreatedAt(LocalDateTime.now());
@@ -72,7 +86,6 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
     private User dtoUpdateToObject(UserUpdateDTO userUpdateDTO, User user) {
         user.setFirstName(userUpdateDTO.getFirstName());
         user.setLastName(userUpdateDTO.getLastName());
-        user.setBirthAt(userUpdateDTO.getBirthAt());
         user.setPhone(userUpdateDTO.getPhone());
         user.setPhoto(userUpdateDTO.getPhoto());
 
@@ -88,21 +101,28 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
         user.setPhone(null);
         user.setPhoto(null);
         user.setRoles("[\"DELETED_USER\"]");
-        user.setEmail("Deleted User");
+        user.setEmail("deleted@user.com");
+
+        user.setActivationCode(UUID.randomUUID().toString());
 
         user.getAddresses().forEach((address -> {
             address.setUser(null);
             addressRepository.save(address);
         }));
         favoriteRepository.deleteAll(user.getFavorites());
+        user.setFavorites(new ArrayList<>());
 
         userRepository.saveAndFlush(user);
 
         return true;
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public User upgradeToAdmin(String id) {
+        User user = findById(id);
+
+        user.setRoles("[\"ROLE_USER\",\"ROLE_ADMIN\"]");
+
+        return userRepository.saveAndFlush(user);
     }
 
     public User findById(String userId) throws EntityNotFoundException {
@@ -118,9 +138,9 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
     }
 
     public User activate(String activationCode) {
-        User user = userRepository.findByActivationCode(activationCode).orElseThrow(ExpiredCodeException::new);
+        User user = userRepository.findByActivationCode(activationCode).orElseThrow(AlreadyActiveException::new);
 
-        if(user.getActivationTimeout().isAfter(LocalDateTime.now())) {
+        if(user.getActivationTimeout().isBefore(LocalDateTime.now())) {
             throw new ExpiredCodeException();
         }
 
@@ -144,8 +164,14 @@ public class UserService implements ServiceDtoInterface<User, UserCreateDTO>, Us
 
     private List<GrantedAuthority> userGrantedAuthority(String role) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        List<String> roles = Collections.singletonList(role);
-        roles.forEach(r -> authorities.add(new SimpleGrantedAuthority(r)));
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        if (role.contains("ADMIN")) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        }
         return authorities;
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User"));
     }
 }

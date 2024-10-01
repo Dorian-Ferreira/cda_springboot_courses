@@ -38,15 +38,22 @@ public class SecurityConfig {
                 auth.requestMatchers(
                         AntPathRequestMatcher.antMatcher(UrlRoute.LOGIN),
                         AntPathRequestMatcher.antMatcher(UrlRoute.REGISTER),
-                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_LODGING + "/**")
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_LODGING + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_REVIEW + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_USER + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_ROOM_TYPE + "/**")
                     ).permitAll()
 
                     .requestMatchers(
-                        AntPathRequestMatcher.antMatcher("/api/**")
+                        AntPathRequestMatcher.antMatcher(UrlRoute.BASE_USER + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.POST, UrlRoute.BASE_REVIEW + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.POST, UrlRoute.BASE_BOOKING + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, UrlRoute.BOOKING_CANCEL + "/**"),
+                        AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, UrlRoute.REVIEW_DELETE + "/**")
                     ).authenticated()
 
                     .requestMatchers(
-                            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/**")
+                            AntPathRequestMatcher.antMatcher("/api/**")
                     ).hasAnyAuthority("ADMIN")
             );
 

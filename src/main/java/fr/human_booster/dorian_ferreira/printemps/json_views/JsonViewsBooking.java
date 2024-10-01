@@ -9,6 +9,7 @@ public class JsonViewsBooking {
     public interface CreatedAt {}
     public interface Number {}
     public interface Uuid {}
+    public interface Canceled { }
 
     public interface BookingUserShow extends
             Uuid,
@@ -17,4 +18,18 @@ public class JsonViewsBooking {
             FinishedAt,
             Lodging
     {}
+
+    public interface BookingShow extends
+            Uuid,
+            Number,
+            StartedAt,
+            FinishedAt,
+
+            Lodging,
+            JsonViewsLodging.LodgingSimpleShow,
+
+            User,
+            JsonViewsUser.UserSimpleShow
+    { }
+
 }

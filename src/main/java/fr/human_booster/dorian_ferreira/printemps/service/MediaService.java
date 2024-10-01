@@ -4,7 +4,6 @@ import fr.human_booster.dorian_ferreira.printemps.dto.MediaDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.Media;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.MediaRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class MediaService implements ServiceDtoInterface<Media, MediaDTO> {
+public class MediaService {
 
     private MediaRepository mediaRepository;
     private LodgingService lodgingService;
@@ -30,7 +29,6 @@ public class MediaService implements ServiceDtoInterface<Media, MediaDTO> {
         }
     }
 
-    @Override
     public  Media dtoToObject(MediaDTO mediaDTO, Media media) {
         media.setPath(mediaDTO.getPath());
         media.setExtension(mediaDTO.getExtension());

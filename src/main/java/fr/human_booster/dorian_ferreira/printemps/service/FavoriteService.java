@@ -5,7 +5,6 @@ import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.entity.embeddedId.UserLodgingId;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
-import fr.human_booster.dorian_ferreira.printemps.service.interfaces.ServiceDtoInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class FavoriteService implements ServiceDtoInterface<Favorite, UserLodgingId> {
+public class FavoriteService {
     private FavoriteRepository favoriteRepository;
     private UserService userService;
     private LodgingService lodgingService;
@@ -49,7 +48,6 @@ public class FavoriteService implements ServiceDtoInterface<Favorite, UserLodgin
         }
     }
 
-    @Override
     public Favorite dtoToObject(UserLodgingId favoriteDto, Favorite favorite) {
 
         favorite.setUser(userService.findById(favoriteDto.getUserUuid()));
