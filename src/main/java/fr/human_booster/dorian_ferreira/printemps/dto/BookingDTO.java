@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class BookingDTO extends BookingLoggedDTO {
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un id d'utilisateur")
+    @NotBlank(message = "Entrez un id d'utilisateur")
     private String userUuid;
 }

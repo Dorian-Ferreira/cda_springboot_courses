@@ -15,28 +15,28 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserCreateDTO {
 
-    @Email
-    @NotNull
-    @NotBlank
+    @Email(message = "Entrez un email valide")
+    @NotNull(message = "Entrez un email valide")
+    @NotBlank(message = "Entrez un email valide")
     private String email;
 
-    @Past
-    @NotNull
+    @Past(message = "Entrez une date de naissance dans le passé")
+    @NotNull(message = "Entrez une date de naissance dans le passé")
     private LocalDate birthAt;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une prénom")
+    @NotBlank(message = "Entrez une prénom")
     private String firstName;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une nom de famille")
+    @NotBlank(message = "Entrez une nom de famille")
     private String lastName;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un mot de passe")
+    @NotBlank(message = "Entrez un mot de passe")
     private String password;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un mot de passe")
+    @NotBlank(message = "Entrez un mot de passe")
     private String confirmPassword;
 }

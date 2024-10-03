@@ -12,22 +12,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddressDTO {
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un nom de rue")
+    @NotBlank(message = "Entrez un nom de rue")
     private String street;
 
     private String number;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un code postal")
+    @NotBlank(message = "Entrez un code postal")
     private String zipCode;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un nom de ville")
+    @NotBlank(message = "Entrez un nom de ville")
     private String city;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un nom de pays")
+    @NotBlank(message = "Entrez un nom de pays")
     private String country;
 
     private String more;

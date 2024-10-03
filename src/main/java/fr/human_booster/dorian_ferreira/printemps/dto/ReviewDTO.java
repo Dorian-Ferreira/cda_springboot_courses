@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDTO extends ReviewLoggedDTO {
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un id d'utilisateur")
+    @NotBlank(message = "Entrez un id d'utilisateur")
     private String userUuid;
 }

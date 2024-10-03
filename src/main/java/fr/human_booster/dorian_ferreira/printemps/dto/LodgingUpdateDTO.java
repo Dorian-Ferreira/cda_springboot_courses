@@ -10,18 +10,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LodgingUpdateDTO {
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un nom")
+    @NotBlank(message = "Entrez un nom")
     private String name;
 
     private String description;
 
-    @Min(1)
+    @Min(value = 1, message = "Entrez la capacité")
     private int capacity;
 
-    @NotNull
+    @NotNull(message = "Renseignez si le gite est accessible")
     private Boolean isAccessible;
 
-    @Min(1)
+    @Min(value = 1, message = "Entrez le prix de la nuit en centimes")
     private int nightPrice;
 }

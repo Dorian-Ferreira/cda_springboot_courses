@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class BookingLoggedDTO {
-    @NotNull
+    @NotNull(message = "Entrez une date de début")
     private LocalDateTime startedAt;
 
-    @NotNull
+    @NotNull(message = "Entrez une date de fin")
     private LocalDateTime finishedAt;
 
-    @Min(1)
+    @Min(value = 1, message = "Entrez le nombre de personne")
     private int quantity;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un id de Gite")
+    @NotBlank(message = "Entrez un id de Gite")
     private String lodgingUuid;
 }

@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserLoginDTO {
 
-    @Email
-    @NotNull
-    @NotBlank
+    @Email(message = "Entrez un email valide")
+    @NotNull(message = "Entrez un email valide")
+    @NotBlank(message = "Entrez un email valide")
     private String email;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un mot de passe")
+    @NotBlank(message = "Entrez un mot de passe")
     private String password;
 
 }

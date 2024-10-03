@@ -13,16 +13,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserUpdateDTO {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une prénom")
+    @NotBlank(message = "Entrez une prénom")
     private String firstName;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une nom de famille")
+    @NotBlank(message = "Entrez une nom de famille")
     private String lastName;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un numéro de téléphone")
+    @NotBlank(message = "Entrez un numéro de téléphone")
     private String phone;
 
     private String photo;

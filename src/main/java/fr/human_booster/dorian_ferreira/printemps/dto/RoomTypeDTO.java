@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RoomTypeDTO {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une clé de traduction")
+    @NotBlank(message = "Entrez une clé de traduction")
     private String translationKey;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez le type de Piece")
+    @NotBlank(message = "Entrez le type de Piece")
     private String type;
 }

@@ -9,6 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 public class AddressUserDTO extends AddressDTO {
-    @NotNull
+    @NotNull(message = "Renseignez si cette adresse est une adresse de facturation")
     private Boolean isBilled;
 }

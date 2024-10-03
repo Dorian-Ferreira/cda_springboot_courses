@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MediaDTO {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez un nom de fichier")
+    @NotBlank(message = "Entrez un nom de fichier")
     private String path;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Entrez une extension de fichier")
+    @NotBlank(message = "Entrez une extension de fichier")
     private String extension;
 }
