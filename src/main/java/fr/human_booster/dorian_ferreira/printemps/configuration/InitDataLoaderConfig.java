@@ -139,7 +139,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             names.add(lodgingCreateDTO.getName());
 
             lodgingCreateDTO.setIsAccessible(Math.random()>0.8f);
-            lodgingCreateDTO.setCapacity(faker.number().numberBetween(5, 30));
+            lodgingCreateDTO.setCapacity(faker.number().numberBetween(3, 15));
 
             switch ((int) Math.floor(Math.random() * 5)) {
                 case 0:
@@ -163,7 +163,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
 
             Lodging lodging = lodgingService.create(lodgingCreateDTO);
 
-            for (int j = 0; j <= Math.random()*2; j++) {
+            for (int j = 0; j <= Math.random()*3; j++) {
                 lodgingService.addRoomTypeInit(lodging.getUuid(), roomTypeService.getOneRandom());
             }
         }
@@ -171,36 +171,18 @@ public class InitDataLoaderConfig implements CommandLineRunner {
     }
 
     private void createRoom() {
-        if(roomTypeService.count() >= 4)
+        List<String> roomTypes = List.of("Kitchen","Bathroom","Master Bedroom","Living Room","Attic","Basement","Garage","Jacuzzi","Pool","1 Bed Bedroom","2 Bed Bedroom");
+
+        if(roomTypeService.count() >= roomTypes.size())
             return;
 
-        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypes.forEach((r) -> {
+            RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
 
-        roomTypeDTO.setTranslationKey("jaccuzi");
-        roomTypeDTO.setType("oui");
+            roomTypeDTO.setType(r);
 
-        roomTypeService.create(roomTypeDTO);
-
-        RoomTypeDTO roomTypeDTO2 = new RoomTypeDTO();
-
-        roomTypeDTO2.setTranslationKey("pas un jaccuzi");
-        roomTypeDTO2.setType("oui");
-
-        roomTypeService.create(roomTypeDTO2);
-
-        RoomTypeDTO roomTypeDTO3 = new RoomTypeDTO();
-
-        roomTypeDTO3.setTranslationKey("peut etre un jaccuzi");
-        roomTypeDTO3.setType("oui");
-
-        roomTypeService.create(roomTypeDTO3);
-
-        RoomTypeDTO roomTypeDTO4 = new RoomTypeDTO();
-
-        roomTypeDTO4.setTranslationKey("definitivement un jaccuzi");
-        roomTypeDTO4.setType("oui");
-
-        roomTypeService.create(roomTypeDTO4);
+            roomTypeService.create(roomTypeDTO);
+        });
     }
 
     private void createFavorite() {

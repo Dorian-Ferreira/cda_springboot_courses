@@ -4,6 +4,7 @@ import fr.human_booster.dorian_ferreira.printemps.dto.RoomTypeDTO;
 import fr.human_booster.dorian_ferreira.printemps.entity.RoomType;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.repository.RoomTypeRepository;
+import fr.human_booster.dorian_ferreira.printemps.slugger.Slugger;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomTypeService {
 
-    private RoomTypeRepository roomTypeRepository;
+    private final RoomTypeRepository roomTypeRepository;
+    private final Slugger slugger;
 
     public RoomType create(RoomTypeDTO dto) {
         RoomType roomType = dtoToObject(dto, new RoomType());
@@ -23,7 +25,7 @@ public class RoomTypeService {
 
     public RoomType dtoToObject(RoomTypeDTO roomTypeDTO, RoomType roomType) {
         roomType.setType(roomTypeDTO.getType());
-        roomType.setTranslationKey(roomTypeDTO.getTranslationKey());
+        roomType.setTranslationKey(String.format("room:%s",slugger.slugify(roomTypeDTO.getType())));
 
         return roomType;
     }
