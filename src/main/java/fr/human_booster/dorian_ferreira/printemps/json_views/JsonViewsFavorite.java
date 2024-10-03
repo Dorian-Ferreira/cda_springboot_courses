@@ -8,6 +8,7 @@ public class JsonViewsFavorite {
 
     public interface FavoriteUserShow extends
             Lodging,
+            JsonViewsLodging.LodgingSimpleShow,
             CreatedAt
     {}
 }

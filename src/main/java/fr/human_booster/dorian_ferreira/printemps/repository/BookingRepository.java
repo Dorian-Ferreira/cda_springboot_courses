@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, String> {
-    List<Booking> findAllByLodgingUuidAndIsCanceledNullAndStartedAtAfter(String uuid, LocalDateTime date);
+    List<Booking> findAllByLodgingUuidAndIsCanceledNotNull(String uuid);
 }

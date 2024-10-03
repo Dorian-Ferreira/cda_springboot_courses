@@ -87,13 +87,13 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @PostMapping(UrlRoute.USER_FAVORITE)
-    public CustomResponse handleFavorite(@Valid @RequestBody UserLodgingId dto) {
+    @PostMapping(UrlRoute.USER_FAVORITE + "/{lodgingId}")
+    public CustomResponse handleFavorite(@PathVariable String lodgingId, Principal principal) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("User");
-        customResponse.setData(favoriteService.persist(dto));
+        customResponse.setData(favoriteService.persist(lodgingId, principal));
 
         return customResponse;
     }

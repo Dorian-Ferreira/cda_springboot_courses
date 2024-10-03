@@ -93,6 +93,6 @@ public class BookingService {
     }
 
     public List<Booking> findAllByLodging(String uuid) {
-        return bookingRepository.findAllByLodgingUuidAndIsCanceledNullAndStartedAtAfter(uuid, LocalDateTime.now());
+        return bookingRepository.findAllByLodgingUuidAndIsCanceledNotNull(uuid);
     }
 }

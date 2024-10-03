@@ -12,6 +12,7 @@ public class JsonViewsReview {
 
     public interface ReviewUserShow extends
             Lodging,
+            JsonViewsLodging.LodgingSimpleShow,
             Rating,
             Content,
             CreatedAt,
@@ -20,6 +21,7 @@ public class JsonViewsReview {
 
     public interface ReviewLodgingShow extends
             User,
+            JsonViewsUser.UserSimpleShow,
             Rating,
             Content,
             CreatedAt,

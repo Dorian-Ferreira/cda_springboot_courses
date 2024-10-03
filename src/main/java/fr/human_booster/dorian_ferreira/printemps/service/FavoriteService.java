@@ -8,6 +8,7 @@ import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,13 +39,17 @@ public class FavoriteService {
         favoriteRepository.flush();
     }
 
-    public User persist(UserLodgingId dto) {
+    public User persist(String lodgingId, Principal principal) {
+        UserLodgingId userLodgingId = new UserLodgingId();
+
+        userLodgingId.setLodgingUuid(lodgingId);
+        userLodgingId.setUserUuid(userService.findByEmail(principal.getName()).getUuid());
         try {
-            Favorite favorite = findById(dto);
+            Favorite favorite = findById(userLodgingId);
             delete(favorite.getId());
             return favorite.getUser();
         } catch (Exception ignore) {
-            return create(dto).getUser();
+            return create(userLodgingId).getUser();
         }
     }
 

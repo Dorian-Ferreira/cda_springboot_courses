@@ -16,7 +16,8 @@ public class JsonViewsBooking {
             Number,
             StartedAt,
             FinishedAt,
-            Lodging
+            Lodging,
+            JsonViewsLodging.LodgingSimpleShow
     {}
 
     public interface BookingShow extends
