@@ -102,6 +102,7 @@ public class UserService implements UserDetailsService {
         user.setPhoto(null);
         user.setRoles("[\"DELETED_USER\"]");
         user.setEmail("deleted@user.com");
+        user.setDeletedAt(LocalDateTime.now());
 
         user.setActivationCode(UUID.randomUUID().toString());
 
@@ -146,7 +147,7 @@ public class UserService implements UserDetailsService {
 
         user.setActivationCode(null);
 
-        return user;
+        return userRepository.saveAndFlush(user);
     }
 
     @Override

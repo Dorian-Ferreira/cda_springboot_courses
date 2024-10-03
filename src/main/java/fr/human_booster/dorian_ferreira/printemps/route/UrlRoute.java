@@ -8,6 +8,8 @@ public class UrlRoute {
     public final static String EDIT = "/edit";
     public final static String DELETE = "/delete";
     public final static String SEARCH = "/search";
+    public final static String ADMIN = "/admin";
+    public final static String BASE_ADMIN = BASE_API + ADMIN;
 
     public final static String LOGIN = BASE_API + "/login";
     public final static String REGISTER = BASE_API + "/register";
@@ -15,8 +17,9 @@ public class UrlRoute {
     public final static String BASE_USER = BASE_API + "/user";
     public final static String BASE_BOOKING = BASE_API + "/booking";
     public final static String BASE_LODGING = BASE_API + "/lodging";
+    public final static String BASE_ADMIN_LODGING = BASE_ADMIN + "/lodging";
     public final static String BASE_REVIEW = BASE_API + "/review";
-    public final static String BASE_ROOM_TYPE = BASE_API + "/room_type";
+    public final static String BASE_ROOM_TYPE = BASE_ADMIN + "/room_type";
 
     public final static String USER_ACTIVATION = BASE_USER + "/activation";
     public final static String USER_EDIT = BASE_USER + EDIT;
@@ -28,9 +31,9 @@ public class UrlRoute {
 
     public final static String ROOM_TYPE_CREATE = BASE_ROOM_TYPE + CREATE;
 
-    public final static String LODGING_CREATE = BASE_LODGING + CREATE;
-    public final static String LODGING_EDIT = BASE_LODGING + EDIT;
-    public final static String LODGING_DELETE = BASE_LODGING + DELETE;
+    public final static String LODGING_CREATE = BASE_ADMIN_LODGING + CREATE;
+    public final static String LODGING_EDIT = BASE_ADMIN_LODGING + EDIT;
+    public final static String LODGING_DELETE = BASE_ADMIN_LODGING + DELETE;
     public final static String LODGING_SEARCH = BASE_LODGING + SEARCH;
 
     public final static String REVIEW_CREATE = BASE_REVIEW + CREATE;

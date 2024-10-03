@@ -1,6 +1,7 @@
 package fr.human_booster.dorian_ferreira.printemps.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsReview;
 import fr.human_booster.dorian_ferreira.printemps.json_views.JsonViewsUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -65,6 +66,9 @@ public class User implements UserDetails {
     @NotNull
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @JsonView(JsonViewsUser.DeletedAt.class)
+    private LocalDateTime deletedAt;
 
     @JsonView(JsonViewsUser.Phone.class)
     private String phone;

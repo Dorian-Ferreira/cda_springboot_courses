@@ -19,6 +19,7 @@ public class JsonViewsUser {
     public interface IsAdmin { }
     public interface ActivationCode { }
     public interface ActivationTimeout { }
+    public interface DeletedAt { }
 
     public interface UserShow extends
             Uuid,

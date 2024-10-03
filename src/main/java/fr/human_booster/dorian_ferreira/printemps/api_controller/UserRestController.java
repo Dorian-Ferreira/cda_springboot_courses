@@ -39,6 +39,18 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
+    @GetMapping(UrlRoute.BASE_USER + "/me")
+    public CustomResponse getProfile(Principal principal) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("User");
+        customResponse.setData(userService.findByEmail(principal.getName()));
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.UserShow.class)
     @GetMapping(UrlRoute.USER_ACTIVATION + "/{activationCode}")
     public CustomResponse activate(@PathVariable String activationCode) {
         CustomResponse customResponse = new CustomResponse();
@@ -98,11 +110,11 @@ public class UserRestController {
         return customResponse;
     }
 
-    @DeleteMapping(UrlRoute.USER_DELETE + "/{uuid}")
-    public CustomResponse delete(@PathVariable String uuid) {
+    @DeleteMapping(UrlRoute.USER_DELETE)
+    public CustomResponse delete(Principal principal) {
         CustomResponse customResponse = new CustomResponse();
 
-        boolean success = userService.delete(uuid);
+        boolean success = userService.delete(userService.findByEmail(principal.getName()).getUuid());
 
         customResponse.setStatus(success ? HttpStatus.OK.value() : HttpStatus.BAD_REQUEST.value());
         customResponse.setEntity("User");

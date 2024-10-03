@@ -1,4 +1,4 @@
-package fr.human_booster.dorian_ferreira.printemps.api_controller;
+package fr.human_booster.dorian_ferreira.printemps.api_controller.admin;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import fr.human_booster.dorian_ferreira.printemps.custom_response.CustomResponse;
@@ -12,64 +12,68 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-
 @RestController
 @AllArgsConstructor
-public class LodgingRestController {
+public class AdminLodgingRestController {
 
     private LodgingService lodgingService;
-
-    @JsonView(JsonViews.LodgingList.class)
-    @GetMapping(UrlRoute.BASE_LODGING)
-    public CustomResponse getAll() {
+    @JsonView(JsonViews.LodgingShow.class)
+    @PostMapping(UrlRoute.LODGING_CREATE)
+    public CustomResponse create(@Valid @RequestBody LodgingCreateDTO dto) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("Lodging");
-        customResponse.setData(lodgingService.findAllOpen());
-
-        return customResponse;
-    }
-
-    @JsonView(JsonViews.LodgingList.class)
-    @GetMapping(UrlRoute.LODGING_SEARCH + "/{name}")
-    public CustomResponse searchByName(@PathVariable String name) {
-        CustomResponse customResponse = new CustomResponse();
-
-        customResponse.setStatus(HttpStatus.OK.value());
-        customResponse.setEntity("Lodging");
-        customResponse.setData(lodgingService.findAllOpenByName(name));
-
-        return customResponse;
-    }
-
-    @JsonView(JsonViews.LodgingList.class)
-    @GetMapping(UrlRoute.LODGING_SEARCH)
-    public CustomResponse searchAll(
-            @RequestParam(value="startDate", required = false) LocalDate startDate,
-            @RequestParam(value="endDate", required = false) LocalDate endDate,
-            @RequestParam(value="nightPrice", required = false) Integer nightPrice,
-            @RequestParam(value="capacity", required = false) Integer capacity,
-            @RequestParam(value="isAccessible", required = false) Boolean isAccessible
-    ) {
-        CustomResponse customResponse = new CustomResponse();
-
-        customResponse.setStatus(HttpStatus.OK.value());
-        customResponse.setEntity("Lodging");
-        customResponse.setData(lodgingService.searchAllOpen(startDate, endDate, nightPrice, capacity, isAccessible));
+        customResponse.setData(lodgingService.create(dto));
 
         return customResponse;
     }
 
     @JsonView(JsonViews.LodgingShow.class)
-    @GetMapping(UrlRoute.BASE_LODGING + "/{slug}")
-    public CustomResponse getOne(@PathVariable String slug) {
+    @GetMapping(UrlRoute.LODGING_EDIT + "/{uuid}/add/{id}")
+    public CustomResponse addRoom(@PathVariable String uuid, @PathVariable Long id) {
         CustomResponse customResponse = new CustomResponse();
 
         customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("Lodging");
-        customResponse.setData(lodgingService.findBySlug(slug));
+        customResponse.setData(lodgingService.handleRoomType(uuid, id));
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.LodgingShow.class)
+    @DeleteMapping(UrlRoute.LODGING_EDIT + "/{uuid}/delete/{id}")
+    public CustomResponse removeRoom(@PathVariable String uuid, @PathVariable Long id) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(lodgingService.handleRoomType(uuid, id));
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.LodgingShow.class)
+    @PutMapping(UrlRoute.LODGING_EDIT + "/{uuid}")
+    public CustomResponse update(@Valid @RequestBody LodgingUpdateDTO dto, @PathVariable String uuid) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(lodgingService.update(dto, uuid));
+
+        return customResponse;
+    }
+
+    @DeleteMapping(UrlRoute.LODGING_DELETE + "/{uuid}")
+    public CustomResponse delete(@PathVariable String uuid) {
+        CustomResponse customResponse = new CustomResponse();
+
+        boolean success = lodgingService.delete(uuid);
+
+        customResponse.setStatus(success ? HttpStatus.OK.value() : HttpStatus.BAD_REQUEST.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(success ? "Deleted" : "Failed");
 
         return customResponse;
     }
