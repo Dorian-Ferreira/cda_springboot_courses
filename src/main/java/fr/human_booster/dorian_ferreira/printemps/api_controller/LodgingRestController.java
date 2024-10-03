@@ -99,7 +99,7 @@ public class LodgingRestController {
     }
 
     @JsonView(JsonViews.LodgingShow.class)
-    @PostMapping(UrlRoute.LODGING_EDIT + "/{uuid}")
+    @PutMapping(UrlRoute.LODGING_EDIT + "/{uuid}")
     public CustomResponse update(@Valid @RequestBody LodgingUpdateDTO dto, @PathVariable String uuid) {
         CustomResponse customResponse = new CustomResponse();
 

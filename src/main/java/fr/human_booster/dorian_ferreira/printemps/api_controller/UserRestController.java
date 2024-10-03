@@ -51,7 +51,7 @@ public class UserRestController {
     }
 
     @JsonView(JsonViews.UserShow.class)
-    @PostMapping(UrlRoute.USER_EDIT)
+    @PutMapping(UrlRoute.USER_EDIT)
     public CustomResponse update(@Valid @RequestBody UserUpdateDTO dto, Principal principal) {
         CustomResponse customResponse = new CustomResponse();
 
