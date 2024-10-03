@@ -41,8 +41,7 @@ public class SecurityConfig {
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_LODGING + "/**"),
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_REVIEW + "/**"),
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_USER + "/**"),
-                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_ROOM_TYPE + "/**"),
-                        AntPathRequestMatcher.antMatcher(HttpMethod.POST, UrlRoute.LODGING_SEARCH + "/**")
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, UrlRoute.BASE_ROOM_TYPE + "/**")
                     ).permitAll()
 
                     .requestMatchers(

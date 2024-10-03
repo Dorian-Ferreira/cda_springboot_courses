@@ -95,8 +95,10 @@ public class Lodging implements SluggerInterface {
         return name;
     }
 
-    public void addRoom(RoomType roomType) {
-        if(!roomTypes.contains(roomType)) {
+    public void handleRoom(RoomType roomType) {
+        if(roomTypes.contains(roomType)) {
+            roomTypes.remove(roomType);
+        } else {
             roomTypes.add(roomType);
         }
     }

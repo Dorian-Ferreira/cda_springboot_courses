@@ -93,7 +93,19 @@ public class LodgingRestController {
 
         customResponse.setStatus(HttpStatus.OK.value());
         customResponse.setEntity("Lodging");
-        customResponse.setData(lodgingService.addRoomType(uuid, id));
+        customResponse.setData(lodgingService.handleRoomType(uuid, id));
+
+        return customResponse;
+    }
+
+    @JsonView(JsonViews.LodgingShow.class)
+    @DeleteMapping(UrlRoute.LODGING_EDIT + "/{uuid}/delete/{id}")
+    public CustomResponse removeRoom(@PathVariable String uuid, @PathVariable Long id) {
+        CustomResponse customResponse = new CustomResponse();
+
+        customResponse.setStatus(HttpStatus.OK.value());
+        customResponse.setEntity("Lodging");
+        customResponse.setData(lodgingService.handleRoomType(uuid, id));
 
         return customResponse;
     }

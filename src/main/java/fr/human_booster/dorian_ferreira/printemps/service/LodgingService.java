@@ -71,7 +71,7 @@ public class LodgingService {
             Lodging lodging = findById(uuid);
             RoomType roomType = roomTypeService.findById(id);
 
-            lodging.addRoom(roomType);
+            lodging.handleRoom(roomType);
 
             lodgingRepository.save(lodging);
         } catch (EntityNotFoundException ignored) {
@@ -80,12 +80,12 @@ public class LodgingService {
     }
 
     @Transactional
-    public Lodging addRoomType(String uuid, Long id) {
+    public Lodging handleRoomType(String uuid, Long id) {
         try {
             Lodging lodging = findById(uuid);
             RoomType roomType = roomTypeService.findById(id);
 
-            lodging.addRoom(roomType);
+            lodging.handleRoom(roomType);
 
             return lodgingRepository.saveAndFlush(lodging);
         } catch (EntityNotFoundException e) {

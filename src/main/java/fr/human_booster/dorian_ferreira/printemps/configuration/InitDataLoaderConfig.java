@@ -164,7 +164,7 @@ public class InitDataLoaderConfig implements CommandLineRunner {
             Lodging lodging = lodgingService.create(lodgingCreateDTO);
 
             for (int j = 0; j <= Math.random()*2; j++) {
-                lodgingService.addRoomType(lodging.getUuid(), roomTypeService.getOneRandom());
+                lodgingService.addRoomTypeInit(lodging.getUuid(), roomTypeService.getOneRandom());
             }
         }
         lodgingService.flush();
