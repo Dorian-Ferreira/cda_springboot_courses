@@ -6,6 +6,7 @@ import fr.human_booster.dorian_ferreira.printemps.entity.User;
 import fr.human_booster.dorian_ferreira.printemps.exception.AlreadyActiveException;
 import fr.human_booster.dorian_ferreira.printemps.exception.EntityNotFoundException;
 import fr.human_booster.dorian_ferreira.printemps.exception.ExpiredCodeException;
+import fr.human_booster.dorian_ferreira.printemps.exception.RegisterException;
 import fr.human_booster.dorian_ferreira.printemps.repository.AddressRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.FavoriteRepository;
 import fr.human_booster.dorian_ferreira.printemps.repository.UserRepository;
@@ -32,12 +33,17 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
 
     public User create(UserCreateDTO userDto) {
+        try {
+
         User user = dtoToObject(userDto, new User());
 
         user.setActivationCode(UUID.randomUUID().toString());
         user.setActivationTimeout(LocalDateTime.now().plusMinutes(15));
 
         return userRepository.saveAndFlush(user);
+        } catch (Exception ignored) {
+            throw new RegisterException();
+        }
     }
 
     public User update(UserUpdateDTO userDto, String uuid) {
